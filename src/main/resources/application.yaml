@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: moto-2000
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: none
+
+
+  flyway:
+    enabled: true
+
+
+#api:
+#  security:
+#    token:
+#      secret: ${JWT_SECRET:my-secret-key}
