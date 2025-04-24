@@ -23,6 +23,7 @@ public class Client {
     private UUID id;
 
     @NotBlank(message = "O nome é obrigatório")
+    @Column(nullable = false)
     private String name;
 
     @NotBlank(message = "O CPF é obrigatório")

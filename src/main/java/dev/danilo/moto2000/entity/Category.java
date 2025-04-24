@@ -22,9 +22,17 @@ public class Category {
     private UUID id;
 
     @NotBlank(message = "O nome é obrigatório")
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }
