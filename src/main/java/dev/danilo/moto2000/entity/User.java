@@ -2,6 +2,7 @@ package dev.danilo.moto2000.entity;
 
 import dev.danilo.moto2000.enums.UserRole;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,8 +24,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @NotBlank(message = "Username is required")
+    @Column(unique = true, nullable = false)
     private String username;
 
+    @NotBlank(message = "Password is required")
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
