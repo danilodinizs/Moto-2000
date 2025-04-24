@@ -24,11 +24,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NotBlank(message = "Username is required")
+    @NotBlank(message = "O usuário é obrigatório")
     @Column(unique = true, nullable = false)
     private String username;
 
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "A senha é obrigatória")
     @Column(nullable = false)
     private String password;
 
