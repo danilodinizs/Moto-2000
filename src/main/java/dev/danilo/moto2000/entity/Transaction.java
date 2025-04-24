@@ -4,6 +4,7 @@ import dev.danilo.moto2000.enums.TransactionStatus;
 import dev.danilo.moto2000.enums.TransactionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,11 +26,11 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NotBlank(message = "A quantidade de produtos é obrigatória")
+    @NotNull(message = "A quantidade de produtos é obrigatória")
     @Column(name = "total_products", nullable = false)
     private Integer totalProducts;
 
-    @NotBlank(message = "O preço total é obrigatório")
+    @NotNull(message = "O preço total é obrigatório")
     @Column(nullable = false)
     private BigInteger totalPrice;
 

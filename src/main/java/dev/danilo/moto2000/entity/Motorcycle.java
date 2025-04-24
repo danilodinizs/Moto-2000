@@ -3,6 +3,7 @@ package dev.danilo.moto2000.entity;
 import dev.danilo.moto2000.enums.MotorcycleType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,14 +33,13 @@ public class Motorcycle {
     @Column(nullable = false)
     private String model;
 
-    @NotBlank(message = "O ano da moto é obrigatório")
+    @NotNull(message = "O ano da moto é obrigatório")
     @Column(nullable = false)
     private Integer year;
 
-    @Enumerated(EnumType.STRING)
     private Color color;
 
-    @NotBlank(message = "O tipo da moto é obrigatório")
+    @NotNull(message = "O tipo da moto é obrigatório")
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MotorcycleType motorcycleType;
