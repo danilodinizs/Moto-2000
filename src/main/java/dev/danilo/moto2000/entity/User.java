@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -21,11 +23,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private String name;
+    private String username;
 
     private String password;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Column(name = "created_at")
+    private final LocalDateTime createdAt = LocalDateTime.now();
 
 }
