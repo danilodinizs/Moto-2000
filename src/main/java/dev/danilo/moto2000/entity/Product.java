@@ -2,6 +2,7 @@ package dev.danilo.moto2000.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -36,7 +37,7 @@ public class Product {
     @NotBlank(message = "O preço é obrigatório")
     @Positive(message = "O valor do produto deve ser positivo")
     @Column(nullable = false)
-    private BigInteger price;
+    private BigDecimal price;
 
     @NotBlank(message = "A quantidade em estoque é obrigatória")
     @Min(value = 0, message = "A quantidade em estoque não pode ser menor que zero")
