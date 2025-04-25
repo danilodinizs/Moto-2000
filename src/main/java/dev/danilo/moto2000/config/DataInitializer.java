@@ -22,8 +22,8 @@ public class DataInitializer {
     public void init() {
         if (repository.count() == 0) {
             User admin = new User();
-            admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("Moto2000*"));
+            admin.setUsername("${admin.username}");
+            admin.setPassword(passwordEncoder.encode("${admin.password}"));
             admin.setRole(UserRole.MANAGER);
             repository.save(admin);
         }
