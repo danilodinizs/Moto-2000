@@ -23,7 +23,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             "WHERE (:searchText IS NULL OR " +
             "LOWER(t.description) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
             "LOWER(t.note) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
-            "LOWER(t.status) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
+            "LOWER(t.transactionStatus) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
             "LOWER(p.name) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
             "LOWER(p.sku) LIKE LOWER(CONCAT('%', :searchText, '%')))")
     Page<Transaction> searchTransactions(@Param("searchText") String searchText, Pageable pageable);
