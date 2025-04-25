@@ -29,23 +29,17 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NotBlank(message = "O nome é obrigatório")
     @Column(nullable = false)
     private String name;
 
     private String sku;
 
-    @NotNull(message = "O preço é obrigatório")
-    @Positive(message = "O valor do produto deve ser positivo")
     @Column(nullable = false)
     private BigDecimal price;
 
-    @NotNull(message = "A quantidade em estoque é obrigatória")
-    @Min(value = 0, message = "A quantidade em estoque não pode ser menor que zero")
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;
 
-    @NotBlank(message = "A descrição é obrigatória")
     @Column(nullable = false)
     private String description;
 

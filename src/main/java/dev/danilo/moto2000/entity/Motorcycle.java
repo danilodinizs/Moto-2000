@@ -25,21 +25,17 @@ public class Motorcycle {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NotBlank(message = "A placa da moto é obrigatório")
     @Column(unique = true, nullable = false, name = "license_plate")
     private String licensePlate;
 
-    @NotBlank(message = "O modelo da moto é obrigatório")
     @Column(nullable = false)
     private String model;
 
-    @NotNull(message = "O ano da moto é obrigatório")
     @Column(nullable = false)
     private Integer year;
 
     private Color color;
 
-    @NotNull(message = "O tipo da moto é obrigatório")
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MotorcycleType motorcycleType;

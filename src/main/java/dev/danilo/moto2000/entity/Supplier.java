@@ -21,15 +21,12 @@ public class Supplier {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NotBlank(message = "O nome é obrigatório")
     @Column(nullable = false)
     private String name;
 
-    @NotBlank(message = "O CNPJ é obrigatório")
     @Column(unique = true, nullable = false)
     private String cnpj;
 
-    @NotBlank(message = "O contato é obrigatório")
     @Column(name = "contact_info", nullable = false)
     private String contactInfo;
 

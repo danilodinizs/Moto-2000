@@ -1,5 +1,6 @@
 package dev.danilo.moto2000.entity;
 
+import dev.danilo.moto2000.enums.TransactionPaymentMethod;
 import dev.danilo.moto2000.enums.TransactionStatus;
 import dev.danilo.moto2000.enums.TransactionType;
 import jakarta.persistence.*;
@@ -26,11 +27,9 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NotNull(message = "A quantidade de produtos é obrigatória")
     @Column(name = "total_products", nullable = false)
     private Integer totalProducts;
 
-    @NotNull(message = "O preço total é obrigatório")
     @Column(nullable = false)
     private BigInteger totalPrice;
 
@@ -38,11 +37,14 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
 
+    @Column(name = "transaction_payment_method", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TransactionPaymentMethod transactionPaymentMethod;
+
     @Column(name = "transaction_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private TransactionStatus transactionStatus;
 
-    @NotBlank(message = "A descrição é obrigatória")
     @Column(nullable = false)
     private String description;
 

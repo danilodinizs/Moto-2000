@@ -22,11 +22,9 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NotBlank(message = "O nome é obrigatório")
     @Column(nullable = false)
     private String name;
 
-    @NotBlank(message = "O CPF é obrigatório")
     @Column(unique = true, nullable = false)
     private String cpf;
 

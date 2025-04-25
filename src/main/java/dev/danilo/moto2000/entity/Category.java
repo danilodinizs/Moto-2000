@@ -21,7 +21,6 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NotBlank(message = "O nome é obrigatório")
     @Column(unique = true, nullable = false)
     private String name;
 
