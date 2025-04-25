@@ -14,10 +14,12 @@ spring:
     hibernate:
       ddl-auto: none
 
-
   flyway:
     enabled: true
 
+admin:
+  username: ${ADMIN_USERNAME}
+  password: ${ADMIN_PASSWORD}
 
 #api:
 #  security:
