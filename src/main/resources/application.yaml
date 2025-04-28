@@ -21,7 +21,6 @@ admin:
   username: ${ADMIN_USERNAME}
   password: ${ADMIN_PASSWORD}
 
-#api:
-#  security:
-#    token:
-#      secret: ${JWT_SECRET:my-secret-key}
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 5259600000
