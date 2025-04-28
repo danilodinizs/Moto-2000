@@ -1,4 +1,4 @@
-package dev.danilo.moto2000.config;
+package dev.danilo.moto2000.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
