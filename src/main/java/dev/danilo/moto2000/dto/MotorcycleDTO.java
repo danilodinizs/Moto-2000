@@ -1,5 +1,7 @@
 package dev.danilo.moto2000.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import dev.danilo.moto2000.entity.Client;
 import dev.danilo.moto2000.enums.MotorcycleType;
 import jakarta.persistence.*;
@@ -10,6 +12,8 @@ import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record MotorcycleDTO(
 
         UUID id,
