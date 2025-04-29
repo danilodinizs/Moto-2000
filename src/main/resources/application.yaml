@@ -1,3 +1,6 @@
+server:
+  port: 2904
+
 spring:
   application:
     name: moto-2000
@@ -24,3 +27,4 @@ admin:
 jwt:
   secret: ${JWT_SECRET}
   expiration: 5259600000
+
