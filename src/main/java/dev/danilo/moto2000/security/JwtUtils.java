@@ -21,7 +21,7 @@ public class JwtUtils {
 
     private SecretKey key;
 
-    @Value("${jwt.expiration")
+    @Value("${jwt.expiration}")
     private Long jwtExpiration;
 
     @Value("${jwt.secret}")
