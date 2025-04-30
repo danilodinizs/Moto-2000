@@ -1,5 +1,6 @@
 package dev.danilo.moto2000.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.danilo.moto2000.enums.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
@@ -17,6 +18,7 @@ public record UserDTO(
         String username,
 
         @NotBlank(message = "A senha é obrigatória")
+        @JsonIgnore
         String password,
 
         UserRole role,
