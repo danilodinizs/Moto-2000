@@ -9,6 +9,7 @@ import dev.danilo.moto2000.entity.User;
 import dev.danilo.moto2000.enums.UserRole;
 import dev.danilo.moto2000.exceptions.InvalidCredentialsException;
 import dev.danilo.moto2000.exceptions.NotFoundException;
+import dev.danilo.moto2000.exceptions.UsernameAlreadyExistsException;
 import dev.danilo.moto2000.repository.UserRepository;
 import dev.danilo.moto2000.security.JwtUtils;
 import dev.danilo.moto2000.service.UserService;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -40,6 +42,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Response registerUser(RegisterRequest request) {
         UserRole userRole = UserRole.CLIENT;
+
+
+        if (repository.existsByUsername(request.username())) {
+
+            Response conflictResponse = Response.builder()
+                    .status(409)
+                    .message("Este usernamwe já existe!")
+                    .build();
+            throw new UsernameAlreadyExistsException(conflictResponse);
+        };
 
         if (request.role() != null) {
             userRole = request.role();
@@ -61,10 +73,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response loginUser(LoginRequest request) {
-        User user = repository.findByUsername(request.username()).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+        User user = repository.findByUsername(request.username()).orElseThrow(() -> new InvalidCredentialsException("Credenciais inválidas"));
 
-        if(!encoder.matches(request.password(), user.getPassword()) || !Objects.equals(request.username(), user.getUsername())) {
-            throw new InvalidCredentialsException("Usuário ou senha inválida");
+        if (!encoder.matches(request.password(), user.getPassword())) {
+            log.warn("Tentativa de login com senha inválida para o usuário: {}", request.username());
+            throw new InvalidCredentialsException("Credenciais inválidas");
         }
 
         String token = jwtUtils.generateToken(request.username());
