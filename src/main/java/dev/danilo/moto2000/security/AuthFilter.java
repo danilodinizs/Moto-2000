@@ -32,7 +32,7 @@ public class AuthFilter extends OncePerRequestFilter {
             String username = utils.extractUsername(token);
             UserDetails userDetails = service.loadUserByUsername(username);
             if(StringUtils.hasText(username) && utils.isTokenValid(token, userDetails)) {
-                log.info("Token is valid, {}", username);
+                log.info("Token is valid - User: {}", username);
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
