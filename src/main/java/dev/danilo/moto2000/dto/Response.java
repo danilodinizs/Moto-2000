@@ -40,4 +40,9 @@ public record Response(
         LocalDateTime timeStamp
 
     ) {
+
+    public static ResponseBuilder builder() {
+        return new ResponseBuilder()
+                .timeStamp(LocalDateTime.now());
+    }
 }
