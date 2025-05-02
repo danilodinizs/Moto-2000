@@ -5,39 +5,39 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import dev.danilo.moto2000.enums.TransactionPaymentMethod;
 import dev.danilo.moto2000.enums.TransactionStatus;
 import dev.danilo.moto2000.enums.TransactionType;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-
+import lombok.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record TransactionDTO(
+public class TransactionDTO {
 
-        UUID id,
+    private UUID id;
 
-        Integer totalProducts,
+    private Integer totalProducts;
 
-        BigInteger totalPrice,
+    private BigInteger totalPrice;
 
-        TransactionType transactionType,
+    private TransactionType transactionType;
 
-        TransactionPaymentMethod transactionPaymentMethod,
+    private TransactionPaymentMethod transactionPaymentMethod;
 
-        TransactionStatus transactionStatus,
+    private TransactionStatus transactionStatus;
 
-        String description,
+    private String description;
 
-        LocalDateTime updatedAt,
+    private LocalDateTime updatedAt;
 
-        LocalDateTime createdAt,
+    private LocalDateTime createdAt;
 
-        ClientDTO client,
+    private ClientDTO client;
 
-        ProductDTO product,
+    private ProductDTO product;
 
-        SupplierDTO supplier) {
+    private SupplierDTO supplier;
 }

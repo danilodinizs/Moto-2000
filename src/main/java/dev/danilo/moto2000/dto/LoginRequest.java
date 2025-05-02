@@ -1,4 +1,16 @@
 package dev.danilo.moto2000.dto;
 
-public record LoginRequest(String username, String password) {
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class LoginRequest {
+
+    @NotBlank(message = "O usuário é obrigatório")
+    private String username;
+
+    @NotBlank(message = "A senha é obrigatória")
+    private String password;
 }

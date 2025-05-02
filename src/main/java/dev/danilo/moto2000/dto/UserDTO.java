@@ -1,27 +1,29 @@
 package dev.danilo.moto2000.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import dev.danilo.moto2000.enums.UserRole;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+import lombok.*;
 
-public record UserDTO(
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class UserDTO {
 
-        UUID id,
+        private UUID id;
 
-        @NotBlank(message = "O usuário é obrigatório")
-        String username,
+        private String username;
 
-        @NotBlank(message = "A senha é obrigatória")
         @JsonIgnore
-        String password,
+        private String password;
 
-        UserRole role,
+        private UserRole role;
 
-        LocalDateTime createdAt) {
+        private LocalDateTime createdAt;
 }

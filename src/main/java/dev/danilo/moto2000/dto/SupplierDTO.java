@@ -2,25 +2,27 @@ package dev.danilo.moto2000.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
-
+import lombok.*;
 import java.util.UUID;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record SupplierDTO(
+public class SupplierDTO {
 
-        UUID id,
+        private UUID id;
 
         @NotBlank(message = "O nome é obrigatório")
-        String name,
+        private String name;
 
         @NotBlank(message = "O CNPJ é obrigatório")
-        String cnpj,
+        private String cnpj;
 
         @NotBlank(message = "O contato é obrigatório")
-        String contactInfo,
+        private String contactInfo;
 
-        String address) {
+        private String address;
 }

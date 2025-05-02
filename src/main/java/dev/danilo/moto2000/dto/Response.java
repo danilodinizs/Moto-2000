@@ -3,46 +3,41 @@ package dev.danilo.moto2000.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import dev.danilo.moto2000.enums.UserRole;
-import lombok.Builder;
-
+import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Response(
+public class Response {
 
-        Integer status,
-        String message,
-        String token,
-        UserRole role,
-        String expirationTime,
+        private Integer status;
+        private String message;
+        private String token;
+        private UserRole role;
+        private String expirationTime;
 
-        Integer totalPages,
-        Long totalElements,
+        private Integer totalPages;
+        private Long totalElements;
 
-        UserDTO user,
-        List<UserDTO> users,
+        private UserDTO user;
+        private List<UserDTO> users;
 
-        SupplierDTO supplier,
-        List<SupplierDTO> suppliers,
+        private SupplierDTO supplier;
+        private List<SupplierDTO> suppliers;
 
-        CategoryDTO category,
-        List<CategoryDTO> categories,
+        private CategoryDTO category;
+        private List<CategoryDTO> categories;
 
-        ProductDTO product,
-        List<ProductDTO> products,
+        private ProductDTO product;
+        private List<ProductDTO> products;
 
-        TransactionDTO transaction,
-        List<TransactionDTO> transactions,
+        private TransactionDTO transaction;
+        private List<TransactionDTO> transactions;
 
-        LocalDateTime timeStamp
-
-    ) {
-
-    public static ResponseBuilder builder() {
-        return new ResponseBuilder()
-                .timeStamp(LocalDateTime.now());
-    }
+        private LocalDateTime timeStamp = LocalDateTime.now();
 }

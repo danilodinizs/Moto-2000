@@ -2,41 +2,42 @@ package dev.danilo.moto2000.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import dev.danilo.moto2000.entity.Client;
 import dev.danilo.moto2000.enums.MotorcycleType;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
+import lombok.*;
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record MotorcycleDTO(
+public class MotorcycleDTO {
 
-        UUID id,
+        private UUID id;
 
         @NotBlank(message = "A placa da moto é obrigatório")
 
-        String licensePlate,
+        private String licensePlate;
 
         @NotBlank(message = "O modelo da moto é obrigatório")
-        String model,
+        private String model;
 
         @NotNull(message = "O ano da moto é obrigatório")
-        Integer year,
+        private Integer year;
 
-        Color color,
+        private Color color;
 
         @NotNull(message = "O tipo da moto é obrigatório")
-        MotorcycleType motorcycleType,
+        private MotorcycleType motorcycleType;
 
-        ClientDTO client,
+        private ClientDTO client;
 
-        LocalDateTime createdAt,
+        private LocalDateTime createdAt;
 
-        LocalDateTime updatedAt
-        ) {
+        private LocalDateTime updatedAt;
+
 }

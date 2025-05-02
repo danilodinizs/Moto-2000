@@ -2,31 +2,30 @@ package dev.danilo.moto2000.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import dev.danilo.moto2000.entity.Motorcycle;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
+import lombok.*;
 import jakarta.validation.constraints.NotBlank;
-
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record ClientDTO(
+public class ClientDTO {
 
-        UUID id,
+        private UUID id;
 
         @NotBlank(message = "O nome é obrigatório")
-        String name,
+        private String name;
 
         @NotBlank(message = "O CPF é obrigatório")
-        String cpf,
+        private String cpf;
 
-        String email,
+        private String email;
 
-        String phoneNumber,
+        private String phoneNumber;
 
-        LocalDateTime createdAt
-    ) {
+        private LocalDateTime createdAt;
+
 }
