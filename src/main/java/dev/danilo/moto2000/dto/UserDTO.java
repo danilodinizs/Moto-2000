@@ -26,4 +26,5 @@ public class UserDTO {
         private UserRole role;
 
         private LocalDateTime createdAt;
+
 }
