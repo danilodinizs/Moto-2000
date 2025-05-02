@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -91,7 +92,7 @@ public class UserServiceImpl implements UserService {
     public Response getAllUsers() {
         List<User> users = repository.findAll();
 
-        List<UserDTO> usersDTO = mapper.map(users, new TypeToken<List<UserDTO>>() {}.getType());
+        List<UserDTO> usersDTO = users.stream().map(user -> mapper.map(users, UserDTO.class)).collect(Collectors.toList());
 
         // usersDTO.forEach(user -> user.setTransactions(null));
 
@@ -107,10 +108,8 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String useername = authentication.getName();
 
-        User user = repository.findByUsername(useername)
+        return repository.findByUsername(useername)
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
-
-        return user;
     }
 
     @Override
