@@ -25,10 +25,6 @@ public record TransactionRequest(
         @Positive(message = "O valor deve ser maior que zero")
         Integer totalProducts,
 
-        @NotNull(message = "O preço total é obrigatório")
-        @Positive(message = "O valor deve ser maior que zero")
-        BigInteger totalPrice,
-
         @NotBlank(message = "A descrição é obrigatória")
         String description,
 
