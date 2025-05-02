@@ -50,8 +50,8 @@ public class GlobalExcepetionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<Response> handleUserAlreadyExistException(UsernameAlreadyExistsException ex) {
+    @ExceptionHandler(DataAlreadyExistsException.class)
+    public ResponseEntity<Response> handleUserAlreadyExistException(DataAlreadyExistsException ex) {
         return new ResponseEntity<>(ex.getResponse(), HttpStatus.CONFLICT);
     }
 }

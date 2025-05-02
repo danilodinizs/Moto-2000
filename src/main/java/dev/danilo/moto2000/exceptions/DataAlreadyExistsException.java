@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class UsernameAlreadyExistsException extends RuntimeException {
+public class DataAlreadyExistsException extends RuntimeException {
 
     private final Response response;
 

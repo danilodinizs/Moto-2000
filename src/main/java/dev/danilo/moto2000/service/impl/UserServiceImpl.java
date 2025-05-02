@@ -9,24 +9,20 @@ import dev.danilo.moto2000.entity.User;
 import dev.danilo.moto2000.enums.UserRole;
 import dev.danilo.moto2000.exceptions.InvalidCredentialsException;
 import dev.danilo.moto2000.exceptions.NotFoundException;
-import dev.danilo.moto2000.exceptions.UsernameAlreadyExistsException;
+import dev.danilo.moto2000.exceptions.DataAlreadyExistsException;
 import dev.danilo.moto2000.repository.UserRepository;
 import dev.danilo.moto2000.security.JwtUtils;
 import dev.danilo.moto2000.service.UserService;
-import io.jsonwebtoken.security.Password;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -50,7 +46,7 @@ public class UserServiceImpl implements UserService {
                     .status(409)
                     .message("Este usernamwe já existe!")
                     .build();
-            throw new UsernameAlreadyExistsException(conflictResponse);
+            throw new DataAlreadyExistsException(conflictResponse);
         };
 
         if (request.getRole() != null) {
