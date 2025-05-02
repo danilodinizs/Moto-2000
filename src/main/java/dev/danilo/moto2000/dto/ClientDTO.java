@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -25,6 +26,10 @@ public class ClientDTO {
         private String email;
 
         private String phoneNumber;
+
+        private List<MotorcycleDTO> motorcycles;
+
+        private List<TransactionDTO> transactions;
 
         private LocalDateTime createdAt;
 
