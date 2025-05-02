@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
         UserRole userRole = UserRole.CLIENT;
 
 
-        if (repository.existsByUsername(request.username())) {
+        if (repository.existsByUsername(request.getUsername())) {
 
             Response conflictResponse = Response.builder()
                     .status(409)
@@ -53,13 +53,13 @@ public class UserServiceImpl implements UserService {
             throw new UsernameAlreadyExistsException(conflictResponse);
         };
 
-        if (request.role() != null) {
-            userRole = request.role();
+        if (request.getRole() != null) {
+            userRole = request.getRole();
         }
 
         User userToSave = User.builder()
-                .username(request.username())
-                .password(encoder.encode(request.password()))
+                .username(request.getUsername())
+                .password(encoder.encode(request.getPassword()))
                 .role(userRole)
                 .build();
 
@@ -73,14 +73,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response loginUser(LoginRequest request) {
-        User user = repository.findByUsername(request.username()).orElseThrow(() -> new InvalidCredentialsException("Credenciais inválidas"));
+        User user = repository.findByUsername(request.getUsername()).orElseThrow(() -> new InvalidCredentialsException("Credenciais inválidas"));
 
-        if (!encoder.matches(request.password(), user.getPassword())) {
-            log.warn("Tentativa de login com senha inválida para o usuário: {}", request.username());
+        if (!encoder.matches(request.getPassword(), user.getPassword())) {
+            log.warn("Tentativa de login com senha inválida para o usuário: {}", request.getUsername());
             throw new InvalidCredentialsException("Credenciais inválidas");
         }
 
-        String token = jwtUtils.generateToken(request.username());
+        String token = jwtUtils.generateToken(request.getUsername());
 
         return Response.builder()
                 .status(200)
@@ -122,11 +122,11 @@ public class UserServiceImpl implements UserService {
         User user = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
 
-        if (dto.username() != null) user.setUsername(dto.username());
-        if (dto.role() != null) user.setRole(dto.role());
+        if (dto.getUsername() != null) user.setUsername(dto.getUsername());
+        if (dto.getRole() != null) user.setRole(dto.getRole());
 
-        if (dto.password() != null && !dto.password().isEmpty()) {
-            user.setPassword(encoder.encode(dto.password()));
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            user.setPassword(encoder.encode(dto.getPassword()));
         }
 
         repository.save(user);
