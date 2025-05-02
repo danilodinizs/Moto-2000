@@ -27,6 +27,12 @@ public class Response {
         private UserDTO user;
         private List<UserDTO> users;
 
+        private ClientDTO client;
+        private List<ClientDTO> clients;
+
+        private MotorcycleDTO motorcycle;
+        private List<MotorcycleDTO> motorcycles;
+
         private SupplierDTO supplier;
         private List<SupplierDTO> suppliers;
 
