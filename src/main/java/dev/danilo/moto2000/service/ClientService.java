@@ -9,10 +9,7 @@ public interface ClientService {
 
     Response saveClient(ClientDTO clientDTO);
     Response getAllClients();
-    Response getClientByName(String name);
-    Response getClientByCpf(String cpf);
-    Response getClientByEmail(String email);
-    Response getClientByPhoneNumber(String phoneNumber);
+    Response getByField(String field, String value);
     Response getMotorcycles(UUID id);
     Response getTransactions(UUID id);
     Response updateClient(UUID id, ClientDTO clientDTO);
