@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -94,21 +95,77 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Response getMotorcycles(UUID id) {
-        return null;
+
+        Client client = repository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+
+        if (client.getMotorcycles() == null) {
+            return Response.builder()
+                    .status(204)
+                    .message("Nenhuma motocicleta encontrada para o cliente: " + client.getName())
+                    .build();
+        }
+
+        ClientDTO clientDTO = mapper.map(client, ClientDTO.class);
+
+        clientDTO.getMotorcycles().forEach(motorcycleDTO -> {
+            motorcycleDTO.setClient(null);
+        });
+
+        return Response.builder()
+                .status(200)
+                .message("Sucesso")
+                .client(clientDTO)
+                .build();
     }
 
     @Override
     public Response getTransactions(UUID id) {
-        return null;
+        Client client = repository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+
+        if (client.getTransactions() == null) {
+            return Response.builder()
+                    .status(204)
+                    .message("Nenhuma transação encontrada para o cliente: " + client.getName())
+                    .build();
+        }
+
+        ClientDTO clientDTO = mapper.map(client, ClientDTO.class);
+
+        clientDTO.getTransactions().forEach(transactionDTO -> {
+            transactionDTO.setClient(null);
+            transactionDTO.setSupplier(null);
+        });
+
+        return Response.builder()
+                .status(200)
+                .message("Sucesso")
+                .client(clientDTO)
+                .build();
     }
 
     @Override
     public Response updateClient(UUID id, ClientDTO clientDTO) {
-        return null;
+        Client client = repository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+
+        mapper.map(clientDTO, client);
+
+        repository.save(client);
+
+        return Response.builder()
+                .status(200)
+                .message("Cliente atualizado com sucesso")
+                .build();
     }
 
     @Override
     public Response deleteClient(UUID id) {
-        return null;
+        Client client = repository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+
+        repository.delete(client);
+
+        return Response.builder()
+                .status(200)
+                .message("Cliente deletado com sucesso")
+                .build();
     }
 }
