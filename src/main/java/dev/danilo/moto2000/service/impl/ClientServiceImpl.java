@@ -96,7 +96,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Response getMotorcycles(UUID id) {
 
-        Client client = repository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+        Client client = repository.findById(id).orElseThrow(() -> new NotFoundException("Cliente não encontrado"));
 
         if (client.getMotorcycles() == null) {
             return Response.builder()
@@ -164,7 +164,7 @@ public class ClientServiceImpl implements ClientService {
         repository.delete(client);
 
         return Response.builder()
-                .status(200)
+                .status(204)
                 .message("Cliente deletado com sucesso")
                 .build();
     }

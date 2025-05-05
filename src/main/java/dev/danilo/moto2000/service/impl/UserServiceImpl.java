@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
         repository.delete(user);
 
         return Response.builder()
-                .status(200)
+                .status(204)
                 .message("Usuário deletado com sucesso")
                 .build();
     }
