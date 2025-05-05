@@ -20,7 +20,6 @@ public class MotorcycleDTO {
         private UUID id;
 
         @NotBlank(message = "A placa da moto é obrigatório")
-
         private String licensePlate;
 
         @NotBlank(message = "O modelo da moto é obrigatório")
