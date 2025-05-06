@@ -51,7 +51,12 @@ public class GlobalExcepetionHandler {
     }
 
     @ExceptionHandler(DataAlreadyExistsException.class)
-    public ResponseEntity<Response> handleUserAlreadyExistException(DataAlreadyExistsException ex) {
+    public ResponseEntity<Response> handleDataAlreadyExistException(DataAlreadyExistsException ex) {
         return new ResponseEntity<>(ex.getResponse(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Response> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        return new ResponseEntity<>(ex.getResponse(), HttpStatus.BAD_REQUEST);
     }
 }
