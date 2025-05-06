@@ -61,12 +61,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Response updateCategory(UUID id, CategoryDTO dto) {
+    public Response updateCategory(UUID id, CategoryDTO categoryDTO) {
         Category category = repository.findById(id).orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
 
-        mapper.map(dto, category);
+        categoryDTO.setId(category.getId());
 
-        repository.save(category);
+        Category newCategory = mapper.map(categoryDTO, Category.class);
+
+        repository.save(newCategory);
 
         return Response.builder()
                 .status(200)

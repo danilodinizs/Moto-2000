@@ -147,9 +147,11 @@ public class ClientServiceImpl implements ClientService {
     public Response updateClient(UUID id, ClientDTO clientDTO) {
         Client client = repository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
 
-        mapper.map(clientDTO, client);
+        clientDTO.setId(client.getId());
 
-        repository.save(client);
+        Client newClient = mapper.map(clientDTO, Client.class);
+
+        repository.save(newClient);
 
         return Response.builder()
                 .status(200)

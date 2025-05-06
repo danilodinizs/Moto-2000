@@ -84,9 +84,11 @@ public class MotorcycleServiceImpl implements MotorcycleService {
     public Response updateMotorcycle(UUID id, MotorcycleDTO motorcycleDTO) {
         Motorcycle motorcycle = repository.findById(id).orElseThrow(() -> new NotFoundException("Motocicleta não encontrada"));
 
-        mapper.map(motorcycleDTO, motorcycle);
+        motorcycleDTO.setId(motorcycle.getId());
 
-        repository.save(motorcycle);
+        Motorcycle newMotorcycle = mapper.map(motorcycleDTO, Motorcycle.class);
+
+        repository.save(newMotorcycle);
 
         return Response.builder()
                 .status(200)
