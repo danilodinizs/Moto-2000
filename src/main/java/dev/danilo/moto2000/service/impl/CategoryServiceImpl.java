@@ -3,6 +3,7 @@ package dev.danilo.moto2000.service.impl;
 import dev.danilo.moto2000.dto.CategoryDTO;
 import dev.danilo.moto2000.dto.Response;
 import dev.danilo.moto2000.entity.Category;
+import dev.danilo.moto2000.exceptions.DataAlreadyExistsException;
 import dev.danilo.moto2000.exceptions.NotFoundException;
 import dev.danilo.moto2000.repository.CategoryRepository;
 import dev.danilo.moto2000.service.CategoryService;
@@ -64,6 +65,14 @@ public class CategoryServiceImpl implements CategoryService {
     public Response updateCategory(UUID id, CategoryDTO categoryDTO) {
         Category category = repository.findById(id).orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
 
+        if (repository.existsByName(categoryDTO.getName())) {
+            Response conflictResponse = Response.builder()
+                    .status(409)
+                    .message("Categoria " + categoryDTO.getName() + " já existe")
+                    .build();
+            throw new DataAlreadyExistsException(conflictResponse);
+        }
+
         categoryDTO.setId(category.getId());
 
         Category newCategory = mapper.map(categoryDTO, Category.class);
@@ -73,6 +82,7 @@ public class CategoryServiceImpl implements CategoryService {
         return Response.builder()
                 .status(200)
                 .message("Sucesso")
+                .category(categoryDTO)
                 .build();
     }
 
