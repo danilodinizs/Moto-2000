@@ -69,6 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
             Response conflictResponse = Response.builder()
                     .status(409)
                     .message("Categoria " + categoryDTO.getName() + " já existe")
+                    .category(categoryDTO)
                     .build();
             throw new DataAlreadyExistsException(conflictResponse);
         }
@@ -87,14 +88,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Response deleteCategory(UUID id) {
+    public void deleteCategory(UUID id) {
         Category category = repository.findById(id).orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
 
         repository.delete(category);
 
-        return Response.builder()
-                .status(204)
-                .message("Categoria deletada com sucesso")
-                .build();
     }
 }

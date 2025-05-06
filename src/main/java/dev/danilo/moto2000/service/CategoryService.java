@@ -11,5 +11,5 @@ public interface CategoryService {
     Response getAllCategories();
     Response getCategoryById(UUID id);
     Response updateCategory(UUID id, CategoryDTO dto);
-    Response deleteCategory(UUID id);
+    void deleteCategory(UUID id);
 }

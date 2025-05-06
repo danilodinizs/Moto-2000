@@ -11,5 +11,5 @@ public interface MotorcycleService {
     Response getAllMotorcycle();
     Response getMotorcycleById(UUID id);
     Response updateMotorcycle(UUID id, MotorcycleDTO motorcycleDTO);
-    Response deleteMotorcycle(UUID id);
+    void deleteMotorcycle(UUID id);
 }

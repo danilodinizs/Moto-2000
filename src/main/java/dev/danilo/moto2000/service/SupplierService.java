@@ -10,5 +10,5 @@ public interface SupplierService {
     Response updateSupplier(UUID id, SupplierDTO supplierDTO);
     Response getAllSuppliers();
     Response getSupplierById(UUID id);
-    Response deleteSupplier(UUID id);
+    void deleteSupplier(UUID id);
 }

@@ -6,6 +6,7 @@ import dev.danilo.moto2000.dto.SupplierDTO;
 import dev.danilo.moto2000.entity.Category;
 import dev.danilo.moto2000.entity.Supplier;
 import dev.danilo.moto2000.exceptions.DataAlreadyExistsException;
+import dev.danilo.moto2000.exceptions.MethodArgumentNotValidException;
 import dev.danilo.moto2000.exceptions.NotFoundException;
 import dev.danilo.moto2000.repository.SupplierRepository;
 import dev.danilo.moto2000.service.SupplierService;
@@ -27,8 +28,33 @@ public class SupplierServiceImpl implements SupplierService {
 
     private final ModelMapper mapper;
 
+    private static final String CNPJ_REGEX = "^\\d{2}\\.\\d{3}\\.\\d{3}\\/\\d{4}\\-\\d{2}$";
+
+    private boolean isCnpjValido(String cnpj) {
+        return cnpj != null && cnpj.matches(CNPJ_REGEX);
+    }
+
     @Override
     public Response addSupplier(SupplierDTO supplierDTO) {
+
+        if(!isCnpjValido(supplierDTO.getCnpj())) {
+            Response badRequestResponse = Response.builder()
+                    .status(400)
+                    .message("O CNPJ deve estar no formato XX.XXX.XXX/XXXX-XX")
+                    .build();
+
+            throw new MethodArgumentNotValidException(badRequestResponse);
+        }
+
+        if (repository.existsByCnpj(supplierDTO.getCnpj())) {
+            Response conflictResponse = Response.builder()
+                    .status(409)
+                    .message("CNPJ " + supplierDTO.getCnpj() + " já cadastrado no sistema")
+                    .supplier(supplierDTO)
+                    .build();
+            throw new DataAlreadyExistsException(conflictResponse);
+        }
+
         Supplier supplier = mapper.map(supplierDTO, Supplier.class);
 
         repository.save(supplier);
@@ -42,14 +68,6 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public Response updateSupplier(UUID id, SupplierDTO supplierDTO) {
         Supplier supplier = repository.findById(id).orElseThrow(() -> new NotFoundException("Fornecedor não encontrada"));
-
-        if (repository.existsByCnpj(supplierDTO.getCnpj())) {
-            Response conflictResponse = Response.builder()
-                    .status(409)
-                    .message("CNPJ " + supplierDTO.getCnpj() + " já cadastrado no sistema")
-                    .build();
-            throw new DataAlreadyExistsException(conflictResponse);
-        }
 
         supplierDTO.setId(supplier.getId());
 
@@ -90,14 +108,10 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public Response deleteSupplier(UUID id) {
+    public void deleteSupplier(UUID id) {
         Supplier supplier = repository.findById(id).orElseThrow(() -> new NotFoundException("Fornecedor não encontrada"));
 
         repository.delete(supplier);
 
-        return Response.builder()
-                .status(204)
-                .message("Fornecedor deletado com sucesso")
-                .build();
     }
 }

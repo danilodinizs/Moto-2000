@@ -34,8 +34,9 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('MANAGER')")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Response> deleteUser(@PathVariable UUID id) {
-        return ResponseEntity.ok(service.deleteUser(id));
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+        service.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/current")

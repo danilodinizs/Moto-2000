@@ -13,6 +13,6 @@ public interface ClientService {
     Response getMotorcycles(UUID id);
     Response getTransactions(UUID id);
     Response updateClient(UUID id, ClientDTO clientDTO);
-    Response deleteClient(UUID id);
+    void deleteClient(UUID id);
 
 }

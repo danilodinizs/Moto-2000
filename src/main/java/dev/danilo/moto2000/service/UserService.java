@@ -16,6 +16,6 @@ public interface UserService {
     Response getAllUsers();
     User getCurrentLoggedInUser();
     Response updateUser(UUID id, UserDTO dto);
-    Response deleteUser(UUID id);
+    void deleteUser(UUID id);
 
 }

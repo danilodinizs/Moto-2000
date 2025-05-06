@@ -161,14 +161,10 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Response deleteClient(UUID id) {
+    public void deleteClient(UUID id) {
         Client client = repository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
 
         repository.delete(client);
 
-        return Response.builder()
-                .status(204)
-                .message("Cliente deletado com sucesso")
-                .build();
     }
 }

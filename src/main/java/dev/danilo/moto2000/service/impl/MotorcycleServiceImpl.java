@@ -33,7 +33,8 @@ public class MotorcycleServiceImpl implements MotorcycleService {
         if(repository.existsByLicensePlate(motorcycleDTO.getLicensePlate())) {
             Response conflictResponse = Response.builder()
                     .status(409)
-                    .message("Placa já cadastrada")
+                    .message("Placa " + motorcycleDTO.getLicensePlate() + " já cadastrada no sitema")
+                    .motorcycle(motorcycleDTO)
                     .build();
             throw new DataAlreadyExistsException(conflictResponse);
         }
@@ -98,14 +99,10 @@ public class MotorcycleServiceImpl implements MotorcycleService {
     }
 
     @Override
-    public Response deleteMotorcycle(UUID id) {
+    public void deleteMotorcycle(UUID id) {
         Motorcycle motorcycle = repository.findById(id).orElseThrow(() -> new NotFoundException("Motocicleta não encontrada"));
 
         repository.delete(motorcycle);
 
-        return Response.builder()
-                .status(204)
-                .message("Motocicleta deletada com sucesso")
-                .build();
     }
 }

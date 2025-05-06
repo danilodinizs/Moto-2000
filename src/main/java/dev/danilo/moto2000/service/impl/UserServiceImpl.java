@@ -134,16 +134,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response deleteUser(UUID id) {
+    public void deleteUser(UUID id) {
         User user = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
 
         repository.delete(user);
 
-        return Response.builder()
-                .status(204)
-                .message("Usuário deletado com sucesso")
-                .build();
     }
 
 }
