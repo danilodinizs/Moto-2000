@@ -156,6 +156,7 @@ public class ClientServiceImpl implements ClientService {
         return Response.builder()
                 .status(200)
                 .message("Cliente atualizado com sucesso")
+                .client(clientDTO)
                 .build();
     }
 

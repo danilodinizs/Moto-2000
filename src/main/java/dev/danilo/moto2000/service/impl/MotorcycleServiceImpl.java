@@ -93,6 +93,7 @@ public class MotorcycleServiceImpl implements MotorcycleService {
         return Response.builder()
                 .status(200)
                 .message("Motocicleta atualizada com sucesso")
+                .motorcycle(motorcycleDTO)
                 .build();
     }
 
