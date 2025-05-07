@@ -33,7 +33,7 @@ public class MotorcycleDTO {
         @NotNull(message = "O tipo da moto é obrigatório")
         private MotorcycleType motorcycleType;
 
-        private ClientDTO client;
+        private UUID clientId;
 
         private LocalDateTime createdAt;
 
