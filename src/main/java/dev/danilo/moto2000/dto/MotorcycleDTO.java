@@ -2,11 +2,11 @@ package dev.danilo.moto2000.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import dev.danilo.moto2000.enums.Color;
 import dev.danilo.moto2000.enums.MotorcycleType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

@@ -1,16 +1,14 @@
 package dev.danilo.moto2000.entity;
 
+import dev.danilo.moto2000.enums.Color;
 import dev.danilo.moto2000.enums.MotorcycleType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
