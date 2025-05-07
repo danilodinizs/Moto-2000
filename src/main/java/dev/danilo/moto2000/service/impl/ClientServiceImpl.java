@@ -4,6 +4,7 @@ import dev.danilo.moto2000.dto.ClientDTO;
 import dev.danilo.moto2000.dto.Response;
 import dev.danilo.moto2000.entity.Client;
 import dev.danilo.moto2000.exceptions.DataAlreadyExistsException;
+import dev.danilo.moto2000.exceptions.MethodArgumentNotValidException;
 import dev.danilo.moto2000.exceptions.NotFoundException;
 import dev.danilo.moto2000.repository.ClientRepository;
 import dev.danilo.moto2000.service.ClientService;
@@ -27,6 +28,12 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepository repository;
     private final ModelMapper mapper;
 
+    private static final String CPF_REGEX = "^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$";
+
+    private boolean isCpfValido(String cpf) {
+        return cpf != null && cpf.matches(CPF_REGEX);
+    }
+
     private void validateUniqueFields(ClientDTO dto) {
         Map<String, Supplier<Boolean>> fieldChecks = Map.of(
                 "CPF", () -> repository.existsByCpf(dto.getCpf()),
@@ -49,6 +56,15 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Response saveClient(ClientDTO dto) {
 
+        if (!isCpfValido(dto.getCpf())) {
+            Response badRequestResponse = Response.builder()
+                    .status(400)
+                    .message("O CPF deve estar no formato XXX.XXX.XXX-XX")
+                    .build();
+
+            throw new MethodArgumentNotValidException(badRequestResponse);
+        }
+
         validateUniqueFields(dto);
 
         repository.save(mapper.map(dto, Client.class));
@@ -65,10 +81,18 @@ public class ClientServiceImpl implements ClientService {
 
         List<Client> clients = repository.findAll();
 
-        List<ClientDTO> clientsDTO = clients.stream().map(client -> mapper.map(clients, ClientDTO.class)).collect(Collectors.toList());
+        List<ClientDTO> clientsDTO = clients.stream().map(client -> mapper.map(client, ClientDTO.class)).collect(Collectors.toList());
 
-        clientsDTO.forEach(client -> client.setMotorcycles(null));
-        clientsDTO.forEach(client -> client.setTransactions(null));
+        clientsDTO.forEach(client -> {
+            if (client.getMotorcycles() == null) {
+                client.setMotorcycles(null);
+            }
+        });
+        clientsDTO.forEach(client -> {
+            if (client.getTransactions() == null) {
+                client.setTransactions(null);
+            }
+        });
 
         return Response.builder()
                 .status(200)
