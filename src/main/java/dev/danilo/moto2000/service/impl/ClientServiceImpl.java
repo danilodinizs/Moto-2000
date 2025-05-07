@@ -107,10 +107,6 @@ public class ClientServiceImpl implements ClientService {
 
         ClientDTO clientDTO = mapper.map(client, ClientDTO.class);
 
-        clientDTO.getMotorcycles().forEach(motorcycleDTO -> {
-            motorcycleDTO.setClient(null);
-        });
-
         return Response.builder()
                 .status(200)
                 .message("Sucesso")
