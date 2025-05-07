@@ -24,6 +24,8 @@ public class TransactionRequest {
         @NotBlank(message = "A descrição é obrigatória")
         private String description;
 
+        private UUID serviceOrderId;
+
         private UUID clientId;
 
         private UUID supplierId;

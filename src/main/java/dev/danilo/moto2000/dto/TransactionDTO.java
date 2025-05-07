@@ -39,5 +39,7 @@ public class TransactionDTO {
 
     private ProductDTO product;
 
+    private ServiceOrderDTO serviceOrder;
+
     private SupplierDTO supplier;
 }
