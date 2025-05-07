@@ -35,12 +35,12 @@ public class Client {
     @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "client")
-    private List<Motorcycle> motorcycles;
-
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "client")
+    private List<Motorcycle> motorcycles;
 
     @OneToMany(mappedBy = "client")
     private List<Transaction> transactions;
@@ -52,9 +52,8 @@ public class Client {
                 ", name='" + name + '\'' +
                 ", cpf='" + cpf + '\'' +
                 ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", motorcycles=" + motorcycles +
                 ", createdAt=" + createdAt +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
 }
