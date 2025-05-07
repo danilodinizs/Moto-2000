@@ -42,6 +42,9 @@ public class Response {
         private ProductDTO product;
         private List<ProductDTO> products;
 
+        private ServiceOrderDTO serviceOrder;
+        private List<ServiceOrderDTO> serviceOrders;
+
         private TransactionDTO transaction;
         private List<TransactionDTO> transactions;
 
