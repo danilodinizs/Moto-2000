@@ -27,10 +27,10 @@ public class ClientDTO {
 
         private String phoneNumber;
 
+        private LocalDateTime createdAt;
+
         private List<MotorcycleDTO> motorcycles;
 
         private List<TransactionDTO> transactions;
-
-        private LocalDateTime createdAt;
 
 }
