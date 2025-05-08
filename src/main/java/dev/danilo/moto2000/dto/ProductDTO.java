@@ -1,5 +1,6 @@
 package dev.danilo.moto2000.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Min;
@@ -8,10 +9,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -36,7 +39,8 @@ public class ProductDTO {
         @NotBlank(message = "A descrição é obrigatória")
         private String description;
 
-        private LocalDateTime expiryDate;
+        @JsonFormat(pattern = "dd/MM/yyyy")
+        private LocalDate expiryDate;
 
         private String imageUrl;
 
