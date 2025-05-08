@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final CategoryRepository categoryRepository;
 
-    private static final String IMAGE_DRECTORY = System.getProperty("user.dir") + "/product-image";
+    private static final String IMAGE_DRECTORY = System.getProperty("user.dir") + "/src/main/resources/static/images/";
 
     @Override
     public Response saveProduct(ProductDTO productDTO, MultipartFile imageFile) {
@@ -84,12 +84,6 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProductDTO> productsDTO = products.stream().map(product -> mapper.map(product, ProductDTO.class)).collect(Collectors.toList());
 
-        productsDTO.forEach(productDTO -> {
-            products.forEach(product -> {
-                productDTO.setCategoryId(product.getCategory().getId());
-            });
-        });
-
         return Response.builder()
                 .status(200)
                 .message("Sucesso")
@@ -102,8 +96,6 @@ public class ProductServiceImpl implements ProductService {
         Product product = repository.findById(id).orElseThrow(() -> new NotFoundException("Produto não encontrado"));
 
         ProductDTO productDTO = mapper.map(product, ProductDTO.class);
-
-        productDTO.setCategoryId(product.getCategory().getId());
 
         return Response.builder()
                 .status(200)
@@ -129,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
             log.info("Directory was created");
         }
 
-        String uniqueFileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+        String uniqueFileName = "product-" + UUID.randomUUID() + "-" + imageFile.getOriginalFilename();
         String imagePath = IMAGE_DRECTORY + uniqueFileName;
 
         try {
