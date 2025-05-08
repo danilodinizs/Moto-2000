@@ -20,6 +20,11 @@ spring:
   flyway:
     enabled: true
 
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
+
 admin:
   username: ${ADMIN_USERNAME}
   password: ${ADMIN_PASSWORD}
