@@ -40,6 +40,8 @@ public class ProductDTO {
 
         private String imageUrl;
 
+        private UUID productId;
+
         private UUID categoryId;
 
         private LocalDateTime createdAt;
