@@ -2,6 +2,9 @@ package dev.danilo.moto2000.service.impl;
 
 import dev.danilo.moto2000.dto.ProductDTO;
 import dev.danilo.moto2000.dto.Response;
+import dev.danilo.moto2000.entity.Category;
+import dev.danilo.moto2000.entity.Product;
+import dev.danilo.moto2000.exceptions.NotFoundException;
 import dev.danilo.moto2000.repository.CategoryRepository;
 import dev.danilo.moto2000.repository.ProductRepository;
 import dev.danilo.moto2000.service.ProductService;
@@ -12,8 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
-
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -30,27 +34,88 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response saveProduct(ProductDTO productDTO, MultipartFile imageFile) {
-        return null;
+        Category category = categoryRepository.findById(productDTO.getCategoryId()).orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
+
+        Product product = mapper.map(productDTO, Product.class);
+
+        product.setCategory(category);
+
+        if(imageFile != null) {
+            String imagePath = saveImage(imageFile);
+            product.setImageUrl(imagePath);
+        }
+
+        repository.save(product);
+
+        return Response.builder()
+                .status(200)
+                .message("Sucesso")
+                .build();
     }
 
     @Override
     public Response updateProduct(ProductDTO productDTO, MultipartFile imageFile) {
-        return null;
+        repository.findById(productDTO.getProductId()).orElseThrow(() -> new NotFoundException("Produto não encontrado"));
+
+        Product product = mapper.map(productDTO, Product.class);
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imagePath = saveImage(imageFile);
+            product.setImageUrl(imagePath);
+        }
+
+        if (productDTO.getCategoryId() != null) {
+            Category category = categoryRepository.findById(productDTO.getCategoryId()).orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
+
+            product.setCategory(category);
+        }
+
+        repository.save(product);
+
+        return Response.builder()
+                .status(200)
+                .message("Produto atualizado com sucesso")
+                .build();
     }
 
     @Override
     public Response getAllProducts() {
-        return null;
+        List<Product> products = repository.findAll();
+
+        List<ProductDTO> productsDTO = products.stream().map(product -> mapper.map(product, ProductDTO.class)).collect(Collectors.toList());
+
+        productsDTO.forEach(productDTO -> {
+            products.forEach(product -> {
+                productDTO.setCategoryId(product.getCategory().getId());
+            });
+        });
+
+        return Response.builder()
+                .status(200)
+                .message("Sucesso")
+                .products(productsDTO)
+                .build();
     }
 
     @Override
     public Response getProductById(UUID id) {
-        return null;
+        Product product = repository.findById(id).orElseThrow(() -> new NotFoundException("Produto não encontrado"));
+
+        ProductDTO productDTO = mapper.map(product, ProductDTO.class);
+
+        productDTO.setCategoryId(product.getCategory().getId());
+
+        return Response.builder()
+                .status(200)
+                .message("Sucesso")
+                .product(productDTO)
+                .build();
     }
 
     @Override
     public void deleteProduct(UUID id) {
-
+        Product product = repository.findById(id).orElseThrow(() -> new NotFoundException("Produto não encontrado"));
+        repository.delete(product);
     }
 
     private String saveImage(MultipartFile imageFile) {
