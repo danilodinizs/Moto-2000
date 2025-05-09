@@ -16,10 +16,7 @@ import java.util.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionRequest {
 
-        private Set<UUID> productId;
-
-        @NotNull(message = "A quantidade de produtos é obrigatória")
-        private Integer totalProducts;
+        private List<TransactionItemRequest> items;
 
         @NotBlank(message = "A descrição é obrigatória")
         private String description;
