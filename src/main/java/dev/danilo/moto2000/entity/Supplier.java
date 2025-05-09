@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -31,4 +32,7 @@ public class Supplier {
     private String contactInfo;
 
     private String address;
+
+    @OneToMany(mappedBy = "supplier")
+    private List<Product> products;
 }
