@@ -54,6 +54,11 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ManyToOne
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
+
+
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
