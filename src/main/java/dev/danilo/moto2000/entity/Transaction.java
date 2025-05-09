@@ -58,13 +58,17 @@ public class Transaction {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @ManyToMany
+    @JoinTable(
+            name = "transaction_products",
+            joinColumns = @JoinColumn(name = "transaction_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private Set<Product> products = new HashSet<>();
 
     @OneToMany
     @JoinColumn(name = "transaction_id")
-    private List<ServiceOrder> serviceOrders;
+    private Set<ServiceOrder> serviceOrders;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
