@@ -10,9 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -35,5 +33,5 @@ public class ServiceOrderDTO {
 
     private LocalDateTime createdAt;
 
-    private List<UUID> productsIds = new ArrayList<>();
+    private Set<UUID> productsIds = new HashSet<>();
 }

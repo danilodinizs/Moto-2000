@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -39,7 +40,7 @@ public class ServiceOrder {
             joinColumns = @JoinColumn(name = "service_order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private List<Product> products;
+    private Set<Product> products;
 
     @Column(name = "created_at")
     @CreationTimestamp
