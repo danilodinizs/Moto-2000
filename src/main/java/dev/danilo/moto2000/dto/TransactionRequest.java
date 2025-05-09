@@ -7,9 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +16,7 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionRequest {
 
-        private UUID productId;
+        private Set<UUID> productId;
 
         @NotNull(message = "A quantidade de produtos é obrigatória")
         private Integer totalProducts;
@@ -26,7 +24,7 @@ public class TransactionRequest {
         @NotBlank(message = "A descrição é obrigatória")
         private String description;
 
-        private List<UUID> serviceOrderIds = new ArrayList<>();;
+        private Set<UUID> serviceOrderIds = new HashSet<>();;
 
         private UUID clientId;
 

@@ -9,6 +9,7 @@ import lombok.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -38,8 +39,8 @@ public class TransactionDTO {
 
     private ClientDTO client;
 
-    private ProductDTO product;
+    private Set<ProductDTO> product;
 
-    private List<ServiceOrderDTO> serviceOrder;
+    private Set<ServiceOrderDTO> serviceOrder;
 
 }
