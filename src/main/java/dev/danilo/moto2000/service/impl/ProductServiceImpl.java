@@ -4,9 +4,11 @@ import dev.danilo.moto2000.dto.ProductDTO;
 import dev.danilo.moto2000.dto.Response;
 import dev.danilo.moto2000.entity.Category;
 import dev.danilo.moto2000.entity.Product;
+import dev.danilo.moto2000.entity.Supplier;
 import dev.danilo.moto2000.exceptions.NotFoundException;
 import dev.danilo.moto2000.repository.CategoryRepository;
 import dev.danilo.moto2000.repository.ProductRepository;
+import dev.danilo.moto2000.repository.SupplierRepository;
 import dev.danilo.moto2000.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,15 +32,20 @@ public class ProductServiceImpl implements ProductService {
 
     private final CategoryRepository categoryRepository;
 
+    private final SupplierRepository supplierRepository;
+
     private static final String IMAGE_DRECTORY = System.getProperty("user.dir") + "/src/main/resources/static/images/";
 
     @Override
     public Response saveProduct(ProductDTO productDTO, MultipartFile imageFile) {
         Category category = categoryRepository.findById(productDTO.getCategoryId()).orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
 
+        Supplier supplier = supplierRepository.findById(productDTO.getSupplierId()).orElseThrow(() -> new NotFoundException("Fonercedor não encontrado"));
+
         Product product = mapper.map(productDTO, Product.class);
 
         product.setCategory(category);
+        product.setSupplier(supplier);
 
         if(imageFile != null) {
             String imagePath = saveImage(imageFile);
@@ -68,6 +75,12 @@ public class ProductServiceImpl implements ProductService {
             Category category = categoryRepository.findById(productDTO.getCategoryId()).orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
 
             product.setCategory(category);
+        }
+
+        if (productDTO.getCategoryId() != null) {
+            Supplier supplier = supplierRepository.findById(productDTO.getSupplierId()).orElseThrow(() -> new NotFoundException("Fonercedor não encontrado"));
+
+            product.setSupplier(supplier);
         }
 
         repository.save(product);

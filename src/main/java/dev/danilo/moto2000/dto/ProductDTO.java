@@ -48,6 +48,8 @@ public class ProductDTO {
 
         private UUID categoryId;
 
+        private UUID supplierId;
+
         private LocalDateTime createdAt;
 
         private LocalDateTime updatedAt;
