@@ -14,9 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +32,7 @@ public class ServiceOrderServiceImpl implements ServiceOrderService {
     public Response saveServiceOrder(ServiceOrderDTO dto) {
         ServiceOrder so = mapper.map(dto, ServiceOrder.class);
 
-        List<Product> products = productRepository.findAllById(dto.getProductsIds());
+        Set<Product> products = new HashSet<>(productRepository.findAllById(dto.getProductsIds()));
 
         if (products.size() != dto.getProductsIds().size()) {
             throw new RuntimeException("Um ou mais produtos não encontrados!");
@@ -57,7 +55,7 @@ public class ServiceOrderServiceImpl implements ServiceOrderService {
 
         dto.setId(so.getId());
 
-        List<Product> products = productRepository.findAllById(dto.getProductsIds());
+        Set<Product> products = new HashSet<>(productRepository.findAllById(dto.getProductsIds()));
 
         if (products.size() != dto.getProductsIds().size()) {
             throw new RuntimeException("Um ou mais produtos não encontrados!");
@@ -93,7 +91,7 @@ public class ServiceOrderServiceImpl implements ServiceOrderService {
     public Response getServiceOrderById(UUID id) {
         ServiceOrder so = repository.findById(id).orElseThrow(() -> new NotFoundException("Ordem de serviço não encontrada"));
 
-        List<UUID> productsIds = new ArrayList<>();
+        Set<UUID> productsIds = new HashSet<>();
 
         so.getProducts().forEach(product -> {
             productsIds.add(product.getId());
