@@ -18,7 +18,6 @@ public class TransactionRequest {
         private UUID productId;
 
         @NotNull(message = "A quantidade de produtos é obrigatória")
-        @Positive(message = "O valor deve ser maior que zero")
         private Integer totalProducts;
 
         @NotBlank(message = "A descrição é obrigatória")
