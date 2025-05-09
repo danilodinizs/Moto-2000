@@ -8,6 +8,7 @@ import dev.danilo.moto2000.enums.TransactionType;
 import lombok.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -39,7 +40,7 @@ public class TransactionDTO {
 
     private ProductDTO product;
 
-    private ServiceOrderDTO serviceOrder;
+    private List<ServiceOrderDTO> serviceOrder;
 
     private SupplierDTO supplier;
 }

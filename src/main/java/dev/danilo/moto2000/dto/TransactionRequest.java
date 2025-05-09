@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -23,7 +26,7 @@ public class TransactionRequest {
         @NotBlank(message = "A descrição é obrigatória")
         private String description;
 
-        private UUID serviceOrderId;
+        private List<UUID> serviceOrderIds = new ArrayList<>();;
 
         private UUID clientId;
 
