@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -32,7 +33,7 @@ public class Transaction {
     private Integer totalProducts;
 
     @Column(nullable = false)
-    private BigInteger totalPrice;
+    private BigDecimal totalPrice;
 
     @Column(name = "transaction_type", nullable = false)
     @Enumerated(EnumType.STRING)

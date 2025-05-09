@@ -6,6 +6,8 @@ import dev.danilo.moto2000.enums.TransactionPaymentMethod;
 import dev.danilo.moto2000.enums.TransactionStatus;
 import dev.danilo.moto2000.enums.TransactionType;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +25,7 @@ public class TransactionDTO {
 
     private Integer totalProducts;
 
-    private BigInteger totalPrice;
+    private BigDecimal totalPrice;
 
     private TransactionType transactionType;
 
