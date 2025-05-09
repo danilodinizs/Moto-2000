@@ -30,5 +30,4 @@ public class TransactionRequest {
 
         private UUID clientId;
 
-        private UUID supplierId;
 }

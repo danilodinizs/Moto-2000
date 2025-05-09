@@ -42,5 +42,4 @@ public class TransactionDTO {
 
     private List<ServiceOrderDTO> serviceOrder;
 
-    private SupplierDTO supplier;
 }
