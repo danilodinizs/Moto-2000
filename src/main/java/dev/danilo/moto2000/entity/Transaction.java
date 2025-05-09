@@ -62,9 +62,9 @@ public class Transaction {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "service_order_id")
-    private ServiceOrder serviceOrder;
+    @OneToMany
+    @JoinColumn(name = "transaction_id")
+    private List<ServiceOrder> serviceOrders;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
