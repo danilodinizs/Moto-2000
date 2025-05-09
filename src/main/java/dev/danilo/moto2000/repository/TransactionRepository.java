@@ -19,7 +19,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
     List<Transaction> findAllByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
     @Query("SELECT t FROM Transaction t " +
-            "LEFT JOIN t.product p " +
+            "LEFT JOIN t.products p " +
             "WHERE (:searchText IS NULL OR " +
             "LOWER(t.description) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
             "LOWER(t.note) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
