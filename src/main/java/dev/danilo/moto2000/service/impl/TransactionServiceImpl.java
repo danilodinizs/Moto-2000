@@ -65,7 +65,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .transactionStatus(TransactionStatus.CONCLUÍDO)
                 .totalProducts(totalProducts)
                 .totalPrice(totalPrice)
-                .products(null) //resolver problema no qual tem que ser retornado um set de products mas precisa mostrar quais products e qual quantidade foi, verificar o que pode ser feito.
+                //.products(null) resolver problema no qual tem que ser retornado um set de products mas precisa mostrar quais products e qual quantidade foi, verificar o que pode ser feito.
                 .description(transactionRequest.getDescription())
                 .build();
 
