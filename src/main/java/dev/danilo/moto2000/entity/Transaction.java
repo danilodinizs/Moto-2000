@@ -59,13 +59,8 @@ public class Transaction {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ManyToMany
-    @JoinTable(
-            name = "transaction_products",
-            joinColumns = @JoinColumn(name = "transaction_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private Set<Product> products = new HashSet<>();
+    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TransactionItem> items = new ArrayList<>();
 
     @OneToMany
     @JoinColumn(name = "transaction_id")
