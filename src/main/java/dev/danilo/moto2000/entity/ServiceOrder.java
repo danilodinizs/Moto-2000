@@ -36,7 +36,7 @@ public class ServiceOrder {
 
     @ManyToMany
     @JoinTable(
-            name = "service_order_products",
+            name = "service_order_products_tb",
             joinColumns = @JoinColumn(name = "service_order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
