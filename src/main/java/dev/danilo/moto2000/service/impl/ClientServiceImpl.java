@@ -152,7 +152,7 @@ public class ClientServiceImpl implements ClientService {
         ClientDTO clientDTO = mapper.map(client, ClientDTO.class);
 
         clientDTO.getTransactions().forEach(transactionDTO -> {
-            transactionDTO.setProduct(transactionDTO.getProduct());
+            transactionDTO.setItems(transactionDTO.getItems());
             transactionDTO.setServiceOrder(transactionDTO.getServiceOrder());
             transactionDTO.setClient(null);
         });
