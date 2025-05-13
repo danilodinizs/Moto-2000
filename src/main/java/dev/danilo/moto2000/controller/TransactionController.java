@@ -22,4 +22,9 @@ public class TransactionController {
     public ResponseEntity<Response> restockInventory(@RequestBody @Valid TransactionRequest request) {
         return ResponseEntity.ok(service.restockInventory(request));
     }
+
+    @PostMapping("/sell")
+    public ResponseEntity<Response> sell(@RequestBody @Valid TransactionRequest request) {
+        return ResponseEntity.ok(service.sell(request));
+    }
 }
