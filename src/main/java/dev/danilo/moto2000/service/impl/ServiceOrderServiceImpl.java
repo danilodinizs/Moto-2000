@@ -80,6 +80,8 @@ public class ServiceOrderServiceImpl implements ServiceOrderService {
 
         List<ServiceOrderDTO> soListDTO = soList.stream().map(so -> mapper.map(so, ServiceOrderDTO.class)).toList();
 
+        // MUDAR AQUI
+
         return Response.builder()
                 .status(200)
                 .message("Sucesso")

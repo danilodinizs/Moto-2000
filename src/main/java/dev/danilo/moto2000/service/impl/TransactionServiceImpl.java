@@ -141,6 +141,8 @@ public class TransactionServiceImpl implements TransactionService {
             transactionItems.add(transactionItem);
         }
 
+        // BO SE ENCONTRA ABAIXO.
+
         Set<ServiceOrder> soS = new HashSet<>();
 
         if (transactionRequest.getServiceOrderIds() != null) {
