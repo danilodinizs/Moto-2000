@@ -2,6 +2,7 @@ package dev.danilo.moto2000.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import dev.danilo.moto2000.entity.TransactionItem;
 import dev.danilo.moto2000.enums.TransactionPaymentMethod;
 import dev.danilo.moto2000.enums.TransactionStatus;
 import dev.danilo.moto2000.enums.TransactionType;
@@ -41,7 +42,7 @@ public class TransactionDTO {
 
     private ClientDTO client;
 
-    private Set<ProductDTO> product;
+    private List<TransactionItemRequest> items;
 
     private Set<ServiceOrderDTO> serviceOrder;
 
