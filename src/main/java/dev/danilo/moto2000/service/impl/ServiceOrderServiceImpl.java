@@ -80,7 +80,17 @@ public class ServiceOrderServiceImpl implements ServiceOrderService {
 
         List<ServiceOrderDTO> soListDTO = soList.stream().map(so -> mapper.map(so, ServiceOrderDTO.class)).toList();
 
-        // MUDAR AQUI
+        Set<UUID> productsIds = new HashSet<>();
+
+        soList.forEach(so -> {
+            so.getProducts().forEach(product -> {
+                productsIds.add(product.getId());
+            });
+        });
+
+        soListDTO.forEach(so -> {
+            so.setProductsIds(productsIds);
+        });
 
         return Response.builder()
                 .status(200)
