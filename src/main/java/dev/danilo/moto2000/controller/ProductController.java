@@ -35,6 +35,7 @@ public class ProductController {
             @RequestParam("price") BigDecimal price,
             @RequestParam("stockQuantity") Integer stockQuantity,
             @RequestParam("categoryId") UUID categoryId,
+            @RequestParam("supplierId") UUID supplierId,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam("expiryDate") @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate expiryDate
     ) {
@@ -45,6 +46,7 @@ public class ProductController {
                 .price(price)
                 .stockQuantity(stockQuantity)
                 .categoryId(categoryId)
+                .supplierId(supplierId)
                 .description(description)
                 .expiryDate(expiryDate)
                 .build();
@@ -62,9 +64,11 @@ public class ProductController {
             @RequestParam("stockQuantity") Integer stockQuantity,
             @RequestParam("categoryId") UUID categoryId,
             @RequestParam("productId") UUID productId,
+            @RequestParam("supplierId") UUID supplierId,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam("expiryDate") LocalDate expiryDate
     ) {
+
 
         ProductDTO dto = ProductDTO.builder()
                 .name(name)
@@ -73,6 +77,7 @@ public class ProductController {
                 .stockQuantity(stockQuantity)
                 .categoryId(categoryId)
                 .productId(productId)
+                .supplierId(supplierId)
                 .description(description)
                 .expiryDate(expiryDate)
                 .build();
