@@ -47,10 +47,11 @@ public class SupplierServiceImpl implements SupplierService {
         }
 
         if (repository.existsByCnpj(supplierDTO.getCnpj())) {
+            Supplier existSupplier = repository.findByCnpj(supplierDTO.getCnpj());
             Response conflictResponse = Response.builder()
                     .status(409)
                     .message("CNPJ " + supplierDTO.getCnpj() + " já cadastrado no sistema")
-                    .supplier(supplierDTO)
+                    .supplier(mapper.map(existSupplier, SupplierDTO.class))
                     .build();
             throw new DataAlreadyExistsException(conflictResponse);
         }
