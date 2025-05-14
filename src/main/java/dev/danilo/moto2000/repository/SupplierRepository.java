@@ -9,4 +9,5 @@ import java.util.UUID;
 @Repository
 public interface SupplierRepository extends JpaRepository<Supplier, UUID> {
     Boolean existsByCnpj(String cnpj);
+    Supplier findByCnpj(String cnpj);
 }
