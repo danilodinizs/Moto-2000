@@ -7,6 +7,7 @@ import dev.danilo.moto2000.dto.TransactionRequest;
 import dev.danilo.moto2000.entity.*;
 import dev.danilo.moto2000.enums.TransactionStatus;
 import dev.danilo.moto2000.enums.TransactionType;
+import dev.danilo.moto2000.exceptions.InvalidDataException;
 import dev.danilo.moto2000.exceptions.NameValueRequiredException;
 import dev.danilo.moto2000.exceptions.NotFoundException;
 import dev.danilo.moto2000.repository.*;
@@ -141,25 +142,39 @@ public class TransactionServiceImpl implements TransactionService {
             transactionItems.add(transactionItem);
         }
 
-        // BO SE ENCONTRA ABAIXO.
 
         Set<ServiceOrder> soS = new HashSet<>();
 
         if (transactionRequest.getServiceOrderIds() != null) {
 
-            Set<UUID> serviceOrderIds = transactionRequest.getServiceOrderIds();
+            Set<UUID> serviceOrderIds = new HashSet<>(transactionRequest.getServiceOrderIds());
 
             for (UUID soId : serviceOrderIds) {
                 ServiceOrder so = serviceOrderRepository.findById(soId).orElseThrow(() -> new NotFoundException("Ordem de serviço não encontrada com o ID: " + soId));
 
-                Set<Product> products = so.getProducts();
+                if(so.getTransaction() != null) {
+                    Response response = new Response();
+                    response.setStatus(409);
+                    response.setMessage("Essa ordem de serviço já está fechada: " + so.getId());
+                    throw new InvalidDataException(response);
+                }
+
+                Set<Product> products = new HashSet<>(so.getProducts());
 
                 for (Product product : products) {
+                    if (product.getStockQuantity() < 1) {
+                        throw new IllegalStateException("Produto " + product.getName() + " não possui estoque suficiente");
+                    }
+
                     product.setStockQuantity(product.getStockQuantity() - 1);
                     totalPrice = totalPrice.add(product.getPrice());
                     totalProducts += 1;
 
                     productRepository.save(product);
+                }
+
+                if (so.getLaborCost() != null) {
+                    totalPrice = totalPrice.add(so.getLaborCost());
                 }
 
                 soS.add(so);
