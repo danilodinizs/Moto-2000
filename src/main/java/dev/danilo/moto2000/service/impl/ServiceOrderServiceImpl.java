@@ -42,6 +42,8 @@ public class ServiceOrderServiceImpl implements ServiceOrderService {
 
         repository.save(so);
 
+        dto.setId(so.getId());
+
         return Response.builder()
                 .status(200)
                 .message("Ordem de serviço criada com sucesso")
@@ -78,19 +80,15 @@ public class ServiceOrderServiceImpl implements ServiceOrderService {
     public Response getAllServiceOrders() {
         List<ServiceOrder> soList = repository.findAll();
 
-        List<ServiceOrderDTO> soListDTO = soList.stream().map(so -> mapper.map(so, ServiceOrderDTO.class)).toList();
+        List<ServiceOrderDTO> soListDTO = soList.stream().map(so -> {
+            ServiceOrderDTO dto = mapper.map(so, ServiceOrderDTO.class);
+            Set<UUID> productsIds = so.getProducts().stream()
+                    .map(Product::getId)
+                    .collect(Collectors.toSet());
 
-        Set<UUID> productsIds = new HashSet<>();
-
-        soList.forEach(so -> {
-            so.getProducts().forEach(product -> {
-                productsIds.add(product.getId());
-            });
-        });
-
-        soListDTO.forEach(so -> {
-            so.setProductsIds(productsIds);
-        });
+            dto.setProductsIds(productsIds);
+            return dto;
+        }).toList();
 
         return Response.builder()
                 .status(200)
