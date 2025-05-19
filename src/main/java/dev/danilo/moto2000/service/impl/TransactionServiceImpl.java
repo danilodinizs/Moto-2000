@@ -1,9 +1,6 @@
 package dev.danilo.moto2000.service.impl;
 
-import dev.danilo.moto2000.dto.Response;
-import dev.danilo.moto2000.dto.TransactionDTO;
-import dev.danilo.moto2000.dto.TransactionItemRequest;
-import dev.danilo.moto2000.dto.TransactionRequest;
+import dev.danilo.moto2000.dto.*;
 import dev.danilo.moto2000.entity.*;
 import dev.danilo.moto2000.enums.TransactionStatus;
 import dev.danilo.moto2000.enums.TransactionType;
@@ -18,9 +15,14 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -203,27 +205,114 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Response returnToSupplier(TransactionRequest transactionRequest) {
-        return null;
+    public Response returnToSupplier(TransactionRequest request) {
+        List<TransactionItemRequest> items = request.getItems();
+
+        List<TransactionItem> itemsEntity = new ArrayList<>();
+
+        int totalProducts = 0;
+
+        for (TransactionItemRequest item : items) {
+            Product product = productRepository.findById(item.getProductId()).orElseThrow(() -> new NotFoundException("Produto não encontrado"));
+
+            itemsEntity.add(mapper.map(items, TransactionItem.class));
+
+            totalProducts += item.getQuantity();
+
+            product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
+            productRepository.save(product);
+        }
+
+        Transaction transaction = Transaction.builder()
+                .transactionType(TransactionType.RETORNO_AO_FORNECEDOR)
+                .transactionStatus(TransactionStatus.PPOCESSANDO)
+                .totalProducts(totalProducts)
+                .totalPrice(BigDecimal.ZERO)
+                .items(itemsEntity)
+                .description(request.getDescription())
+                .build();
+
+        repository.save(transaction);
+
+        return Response.builder()
+                .status(200)
+                .message("Processo de retorno ao fornecedor iniciado")
+                .build();
     }
 
     @Override
     public Response getAllTransactions(int page, int size, String searchText) {
-        return null;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Transaction> transactionPage = repository.searchTransactions(searchText, pageable);
+        List<TransactionDTO> transactionDTOS = new ArrayList<>();
+
+        for (Transaction transaction : transactionPage) {
+            transactionDTOS.add(mapper.map(transaction, TransactionDTO.class));
+        }
+
+        transactionDTOS.forEach(transactionDTO -> {
+            transactionDTO.setClient(null);
+            transactionDTO.setItems(null);
+            transactionDTO.setServiceOrder(null);
+        });
+
+        return Response.builder()
+                .status(200)
+                .message("Sucesso")
+                .transactions(transactionDTOS)
+                .build();
     }
 
     @Override
     public Response getTransactionById(UUID id) {
-        return null;
+        Transaction transaction = repository.findById(id).orElseThrow(() -> new NotFoundException("Transação não encontrada"));
+
+        TransactionDTO dto = mapper.map(transaction, TransactionDTO.class);
+
+        dto.getClient().setTransactions(null);
+
+        return Response.builder()
+                .status(200)
+                .message("Sucesso")
+                .transaction(dto)
+                .build();
     }
 
     @Override
     public Response getAllTransactionsByMonthAndYear(int month, int year) {
-        return null;
+        List<Transaction> transactions = repository.findAllByMonthAndYear(month, year);
+
+        List<TransactionDTO> transactionDTOS = new ArrayList<>();
+
+        for (Transaction transaction : transactions) {
+            transactionDTOS.add(mapper.map(transaction, TransactionDTO.class));
+        }
+
+        transactionDTOS.forEach(transactionDTO -> {
+            transactionDTO.setClient(null);
+            transactionDTO.setItems(null);
+            transactionDTO.setServiceOrder(null);
+        });
+
+        return Response.builder()
+                .status(200)
+                .message("Sucesso")
+                .transactions(transactionDTOS)
+                .build();
     }
 
     @Override
     public Response updateTransactionStatus(UUID id, TransactionStatus transactionStatus) {
-        return null;
+        Transaction transaction = repository.findById(id).orElseThrow(() -> new NotFoundException("Transação não encontrada"));
+
+        transaction.setTransactionStatus(transactionStatus);
+        transaction.setUpdatedAt(LocalDateTime.now());
+
+        repository.save(transaction);
+
+        return Response.builder()
+                .status(200)
+                .message("Status da transação atualizado com sucesso")
+                .build();
     }
 }
