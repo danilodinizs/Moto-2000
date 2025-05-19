@@ -149,18 +149,16 @@ public class ClientServiceImpl implements ClientService {
                     .build();
         }
 
-        ClientDTO clientDTO = mapper.map(client, ClientDTO.class);
+        ClientDTO dto = mapper.map(client, ClientDTO.class);
 
-        clientDTO.getTransactions().forEach(transactionDTO -> {
-            transactionDTO.setItems(transactionDTO.getItems());
-            transactionDTO.setServiceOrder(transactionDTO.getServiceOrder());
+        dto.getTransactions().forEach(transactionDTO -> {
             transactionDTO.setClient(null);
         });
 
         return Response.builder()
                 .status(200)
                 .message("Sucesso")
-                .client(clientDTO)
+                .client(dto)
                 .build();
     }
 
@@ -186,6 +184,6 @@ public class ClientServiceImpl implements ClientService {
         Client client = repository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
 
         repository.delete(client);
-
     }
+
 }

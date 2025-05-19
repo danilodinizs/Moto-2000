@@ -29,10 +29,11 @@ public class ClientController {
         return ResponseEntity.ok(service.getAllClients());
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Response> getCategoryById(@PathVariable UUID id) {
-//        return ResponseEntity.ok(service.ge(id));
-//    }
+    @DeleteMapping("/transactions/{id}")
+    public ResponseEntity<Response> getClientTransactions(@PathVariable UUID id) {
+        return ResponseEntity.ok(service.getTransactions(id));
+    }
+
 
     @PatchMapping("/update/{id}")
     public ResponseEntity<Response> updateClient(@PathVariable UUID id, @RequestBody @Valid ClientDTO dto) {
