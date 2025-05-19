@@ -36,6 +36,8 @@ public class TransactionDTO {
 
     private String description;
 
+    private String note;
+
     private LocalDateTime updatedAt;
 
     private LocalDateTime createdAt;

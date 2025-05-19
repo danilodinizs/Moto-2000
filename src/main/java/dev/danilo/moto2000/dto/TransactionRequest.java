@@ -22,6 +22,8 @@ public class TransactionRequest {
         @NotBlank(message = "A descrição é obrigatória")
         private String description;
 
+        private String note;
+
         private TransactionPaymentMethod transactionPaymentMethod;
 
         private Set<UUID> serviceOrderIds = new HashSet<>();;
