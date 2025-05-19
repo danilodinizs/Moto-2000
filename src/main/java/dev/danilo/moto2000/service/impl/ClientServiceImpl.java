@@ -2,7 +2,11 @@ package dev.danilo.moto2000.service.impl;
 
 import dev.danilo.moto2000.dto.ClientDTO;
 import dev.danilo.moto2000.dto.Response;
+import dev.danilo.moto2000.dto.ServiceOrderDTO;
+import dev.danilo.moto2000.dto.TransactionItemRequest;
 import dev.danilo.moto2000.entity.Client;
+import dev.danilo.moto2000.entity.ServiceOrder;
+import dev.danilo.moto2000.entity.Transaction;
 import dev.danilo.moto2000.exceptions.DataAlreadyExistsException;
 import dev.danilo.moto2000.exceptions.MethodArgumentNotValidException;
 import dev.danilo.moto2000.exceptions.NotFoundException;
@@ -13,10 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -149,15 +152,45 @@ public class ClientServiceImpl implements ClientService {
                     .status(404)
                     .message("Nenhuma transação encontrada para o cliente: " + client.getName())
                     .build();
+
         }
+
 
         ClientDTO dto = mapper.map(client, ClientDTO.class);
 
         dto.setMotorcycles(null);
 
+        // TESTES - PROBLEMA ESTÁ NO MÉTODO SELL DE TRANSACTION SERIVCE IMPL
+
+        List<TransactionItemRequest> transactionItemRequests = new ArrayList<>();
+
+        transactionItemRequests.add(TransactionItemRequest.builder()
+                .productId(client.getId())
+                .quantity(2)
+                .build());
+
+        Set<UUID> productIds = new HashSet<>();
+
+        productIds.add(client.getId());
+
+        Set<ServiceOrderDTO> soDTO = new HashSet<>();
+
+        soDTO.add(ServiceOrderDTO.builder()
+                .name("jajaja")
+                .description("bololo")
+                .duration("2 minutos")
+                .laborCost(BigDecimal.TEN)
+                .createdAt(LocalDateTime.now())
+                .productsIds(productIds)
+                .build());
+
         dto.getTransactions().forEach(transactionDTO -> {
             transactionDTO.setClient(null);
+            transactionDTO.setItems(transactionItemRequests);
+            transactionDTO.setServiceOrder(soDTO);
         });
+
+        // TESTES
 
         return Response.builder()
                 .status(200)
