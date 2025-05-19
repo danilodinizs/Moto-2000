@@ -82,6 +82,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .transactionStatus(TransactionStatus.CONCLUÍDO)
                 .totalProducts(totalProducts)
                 .totalPrice(totalPrice)
+                .note(transactionRequest.getNote())
                 .transactionPaymentMethod(transactionRequest.getTransactionPaymentMethod())
                 .description(transactionRequest.getDescription())
                 .build();
@@ -189,6 +190,8 @@ public class TransactionServiceImpl implements TransactionService {
                 .transactionStatus(TransactionStatus.CONCLUÍDO)
                 .totalProducts(totalProducts)
                 .totalPrice(totalPrice)
+                .client(client)
+                .note(transactionRequest.getNote())
                 .transactionPaymentMethod(transactionRequest.getTransactionPaymentMethod())
                 .description(transactionRequest.getDescription())
                 .serviceOrders(soS)
@@ -197,10 +200,41 @@ public class TransactionServiceImpl implements TransactionService {
         // Persiste a transação (os itens serão salvos em cascata)
         repository.save(transaction);
 
+        transaction.setItems(transactionItems);
+
+        // Transforma o set de service order em um set de service order dto
+        Set<ServiceOrderDTO> sosDTO = new HashSet<>();
+
+        soS.forEach(serviceOrder -> {
+            // define a transação de cada so como null para evitar loop
+            serviceOrder.setTransaction(null);
+
+            // faz o map de cada so pra dto
+            ServiceOrderDTO soDTO = mapper.map(serviceOrder, ServiceOrderDTO.class);
+
+            // cria um set de ids para inserir em cada so os ids do set de produtos
+            Set<UUID> ids = new HashSet<>();
+
+            // itera sobre o set de produtos do so e guarda no seti
+            serviceOrder.getProducts().forEach(product -> {
+                ids.add(product.getId());
+            });
+
+            // coloca o set de ids no so
+            soDTO.setProductsIds(ids);
+
+            sosDTO.add(soDTO);
+        });
+
+        // Coloca o client da transação como null
+        TransactionDTO dto = mapper.map(transaction, TransactionDTO.class);
+        dto.setClient(null);
+        dto.setServiceOrder(sosDTO);
+
         return Response.builder()
                 .status(200)
                 .message("Venda concluída com sucesso")
-                .transaction(mapper.map(transaction, TransactionDTO.class))
+                .transaction(dto)
                 .build();
     }
 
@@ -228,6 +262,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .transactionStatus(TransactionStatus.PPOCESSANDO)
                 .totalProducts(totalProducts)
                 .totalPrice(BigDecimal.ZERO)
+                .note(request.getNote())
                 .items(itemsEntity)
                 .description(request.getDescription())
                 .build();
