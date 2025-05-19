@@ -29,9 +29,14 @@ public class ClientController {
         return ResponseEntity.ok(service.getAllClients());
     }
 
-    @DeleteMapping("/transactions/{id}")
+    @GetMapping("/transactions/{id}")
     public ResponseEntity<Response> getClientTransactions(@PathVariable UUID id) {
         return ResponseEntity.ok(service.getTransactions(id));
+    }
+
+    @GetMapping("/motorcycles/{id}")
+    public ResponseEntity<Response> getClientMotorcycles(@PathVariable UUID id) {
+        return ResponseEntity.ok(service.getMotorcycles(id));
     }
 
 

@@ -84,12 +84,12 @@ public class ClientServiceImpl implements ClientService {
         List<ClientDTO> clientsDTO = clients.stream().map(client -> mapper.map(client, ClientDTO.class)).collect(Collectors.toList());
 
         clientsDTO.forEach(client -> {
-            if (client.getMotorcycles() == null) {
+            if (client.getMotorcycles() != null) {
                 client.setMotorcycles(null);
             }
         });
         clientsDTO.forEach(client -> {
-            if (client.getTransactions() == null) {
+            if (client.getTransactions() != null) {
                 client.setTransactions(null);
             }
         });
@@ -124,17 +124,19 @@ public class ClientServiceImpl implements ClientService {
 
         if (client.getMotorcycles() == null) {
             return Response.builder()
-                    .status(204)
+                    .status(404)
                     .message("Nenhuma motocicleta encontrada para o cliente: " + client.getName())
                     .build();
         }
 
-        ClientDTO clientDTO = mapper.map(client, ClientDTO.class);
+        ClientDTO dto = mapper.map(client, ClientDTO.class);
+
+        dto.setTransactions(null);
 
         return Response.builder()
                 .status(200)
                 .message("Sucesso")
-                .client(clientDTO)
+                .motorcycles(dto.getMotorcycles())
                 .build();
     }
 
@@ -144,12 +146,14 @@ public class ClientServiceImpl implements ClientService {
 
         if (client.getTransactions() == null) {
             return Response.builder()
-                    .status(204)
+                    .status(404)
                     .message("Nenhuma transação encontrada para o cliente: " + client.getName())
                     .build();
         }
 
         ClientDTO dto = mapper.map(client, ClientDTO.class);
+
+        dto.setMotorcycles(null);
 
         dto.getTransactions().forEach(transactionDTO -> {
             transactionDTO.setClient(null);
@@ -158,7 +162,7 @@ public class ClientServiceImpl implements ClientService {
         return Response.builder()
                 .status(200)
                 .message("Sucesso")
-                .client(dto)
+                .transactions(dto.getTransactions())
                 .build();
     }
 
