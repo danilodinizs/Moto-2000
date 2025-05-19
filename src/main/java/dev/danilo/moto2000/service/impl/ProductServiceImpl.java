@@ -15,8 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -82,6 +82,8 @@ public class ProductServiceImpl implements ProductService {
 
             product.setSupplier(supplier);
         }
+
+        product.setUpdatedAt(LocalDateTime.now());
 
         repository.save(product);
 
