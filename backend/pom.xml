@@ -12,7 +12,7 @@
 	<artifactId>Moto-2000</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Moto-2000</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Aplicação de gerenciamento de estoque, controle de vendas e clientes para a oficina automobilística Moto 2000</description>
 	<url/>
 	<licenses>
 		<license/>
