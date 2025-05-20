@@ -195,12 +195,15 @@ public class TransactionServiceImpl implements TransactionService {
                 .transactionPaymentMethod(transactionRequest.getTransactionPaymentMethod())
                 .description(transactionRequest.getDescription())
                 .serviceOrders(soS)
+                .items(transactionItems)
                 .build();
+
+        for (TransactionItem item : transactionItems) {
+            item.setTransaction(transaction);
+        }
 
         // Persiste a transação (os itens serão salvos em cascata)
         repository.save(transaction);
-
-        transaction.setItems(transactionItems);
 
         // Transforma o set de service order em um set de service order dto
         Set<ServiceOrderDTO> sosDTO = new HashSet<>();
@@ -259,7 +262,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         Transaction transaction = Transaction.builder()
                 .transactionType(TransactionType.RETORNO_AO_FORNECEDOR)
-                .transactionStatus(TransactionStatus.PPOCESSANDO)
+                .transactionStatus(TransactionStatus.PROCESSANDO)
                 .totalProducts(totalProducts)
                 .totalPrice(BigDecimal.ZERO)
                 .note(request.getNote())
@@ -277,6 +280,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Response getAllTransactions(int page, int size, String searchText) {
+
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Transaction> transactionPage = repository.searchTransactions(searchText, pageable);
         List<TransactionDTO> transactionDTOS = new ArrayList<>();
@@ -304,7 +308,9 @@ public class TransactionServiceImpl implements TransactionService {
 
         TransactionDTO dto = mapper.map(transaction, TransactionDTO.class);
 
-        dto.getClient().setTransactions(null);
+        if(dto.getClient() != null) {
+            dto.getClient().setTransactions(null);
+        }
 
         return Response.builder()
                 .status(200)
