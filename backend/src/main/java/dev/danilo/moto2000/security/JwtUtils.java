@@ -24,6 +24,9 @@ public class JwtUtils {
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
 
+    @Value("${jwt.refresh-expiration:604800000}") // 7 dias por padrão
+    private Long refreshExpiration;
+
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -42,8 +45,30 @@ public class JwtUtils {
                 .compact();
     }
 
+    public String generateToken(UserDetails userDetails) {
+        return generateToken(userDetails.getUsername());
+    }
+
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .subject(username)
+                .claim("type", "refresh") // Identifica como refresh token
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + refreshExpiration))
+                .signWith(key)
+                .compact();
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return generateRefreshToken(userDetails.getUsername());
+    }
+
     public String extractUsername(String token) {
         return extractClaims(token, Claims::getSubject);
+    }
+
+    public String getUsernameFromRefreshToken(String refreshToken) {
+        return extractUsername(refreshToken);
     }
 
     private <T> T extractClaims(String token, Function<Claims, T> claimsTFunction) {
@@ -55,8 +80,39 @@ public class JwtUtils {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
+    public boolean validateToken(String token) {
+        try {
+            return !isTokenExpired(token);
+        } catch (Exception e) {
+            log.warn("Token validation failed: {}", e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean validateRefreshToken(String refreshToken) {
+        try {
+            if (isTokenExpired(refreshToken)) {
+                return false;
+            }
+
+            String tokenType = extractClaims(refreshToken, claims -> claims.get("type", String.class));
+            return "refresh".equals(tokenType);
+
+        } catch (Exception e) {
+            log.warn("Refresh token validation failed: {}", e.getMessage());
+            return false;
+        }
+    }
+
     public boolean isTokenExpired(String token){
         return extractClaims(token, Claims::getExpiration).before(new Date());
     }
 
+    public Date getExpirationDate(String token) {
+        return extractClaims(token, Claims::getExpiration);
+    }
+
+    public Date getIssuedAt(String token) {
+        return extractClaims(token, Claims::getIssuedAt);
+    }
 }

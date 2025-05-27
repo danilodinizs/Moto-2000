@@ -12,10 +12,10 @@ import java.util.UUID;
 public interface UserService {
 
     Response registerUser(RegisterRequest request);
-    Response loginUser(LoginRequest request);
     Response getAllUsers();
     User getCurrentLoggedInUser();
     Response updateUser(UUID id, UserDTO dto);
     void deleteUser(UUID id);
+    String loginAndGetToken(LoginRequest request);
 
 }

@@ -69,23 +69,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response loginUser(LoginRequest request) {
-        User user = repository.findByUsername(request.getUsername()).orElseThrow(() -> new InvalidCredentialsException("Credenciais inválidas"));
+    public String loginAndGetToken(LoginRequest request) {
+        User user = repository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new InvalidCredentialsException("Credenciais inválidas"));
 
         if (!encoder.matches(request.getPassword(), user.getPassword())) {
-            log.warn("Tentativa de login com senha inválida para o usuário: {}", request.getUsername());
+            log.warn("Senha inválida para usuário: {}", request.getUsername());
             throw new InvalidCredentialsException("Credenciais inválidas");
         }
 
-        String token = jwtUtils.generateToken(request.getUsername());
-
-        return Response.builder()
-                .status(200)
-                .message("Usuário logado com sucesso")
-                .role(user.getRole())
-                .token(token)
-                .expirationTime("6 meses")
-                .build();
+        return jwtUtils.generateToken(request.getUsername());
     }
 
     @Override
