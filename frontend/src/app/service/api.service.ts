@@ -1,6 +1,8 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
+import { Category } from '../interfaces/category';
+
 
 // Interface para o status de autenticação retornado pelo backend
 interface AuthStatus {
@@ -73,9 +75,34 @@ export class ApiService {
   getLoggedInUserInfo(): Observable<any> {
     const url = `${ApiService.BASE_URL}/users/current`;
     return this.http.get<any>(url, { withCredentials: true } );
-  }
+}
 
-  
+  /**CATEGOTY ENDPOINTS */
+createCategory(body: any): Observable<any> {
+const url = `${ApiService.BASE_URL}/categories/add`;
+return this.http.post(url, body, { withCredentials: true });
+}
+
+getAllCategories(): Observable<Category[]> {
+  const url = `${ApiService.BASE_URL}/categories/all`;
+  return this.http.get<any>(url, { withCredentials: true });
+}
+
+getCategoryById(id: string): Observable<Category> {
+  const url = `${ApiService.BASE_URL}/categories/${id}`;
+  return this.http.get<any>(url, { withCredentials: true });
+}
+
+updateCategory(id: string, body: any): Observable<any> {
+  const url = `${ApiService.BASE_URL}/categories/update/${id}`;
+  return this.http.patch<any>(url, body, { withCredentials: true });
+}
+
+deleteCategory(id: string): Observable<void> {
+  const url = `${ApiService.BASE_URL}/categories/delete/${id}`;
+  return this.http.delete<any>(url, { withCredentials: true });
+}
+
 
   // --- Exemplo de como fazer outras chamadas autenticadas ---
 
