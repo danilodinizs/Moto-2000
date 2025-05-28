@@ -29,7 +29,7 @@ public class ProductController {
     @PostMapping("/save")
     @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<Response> saveProduct(
-            @RequestParam("imageFile") MultipartFile imageFile,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             @RequestParam("name") String name,
             @RequestParam(value = "sku", required = false) String sku,
             @RequestParam("price") BigDecimal price,
@@ -37,7 +37,7 @@ public class ProductController {
             @RequestParam("categoryId") UUID categoryId,
             @RequestParam("supplierId") UUID supplierId,
             @RequestParam(value = "description", required = false) String description,
-            @RequestParam("expiryDate") @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate expiryDate
+            @RequestParam(value = "expiryDate", required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate expiryDate
     ) {
 
         ProductDTO dto = ProductDTO.builder()
@@ -57,7 +57,7 @@ public class ProductController {
     @PatchMapping("/update")
     @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<Response> updateProduct(
-            @RequestParam("imageFile") MultipartFile imageFile,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             @RequestParam("name") String name,
             @RequestParam(value = "sku", required = false) String sku,
             @RequestParam("price") BigDecimal price,
@@ -66,7 +66,7 @@ public class ProductController {
             @RequestParam("productId") UUID productId,
             @RequestParam("supplierId") UUID supplierId,
             @RequestParam(value = "description", required = false) String description,
-            @RequestParam("expiryDate") LocalDate expiryDate
+            @RequestParam(value = "expiryDate", required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate expiryDate
     ) {
 
 
