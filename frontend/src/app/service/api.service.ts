@@ -4,6 +4,7 @@ import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { Category } from '../interfaces/category';
 import { ApiResponse } from '../interfaces/api-response';
 import { Supplier } from '../interfaces/supplier';
+import { Product } from '../interfaces/product';
 
 
 // Interface para o status de autenticação retornado pelo backend
@@ -85,6 +86,11 @@ const url = `${ApiService.BASE_URL}/categories/add`;
 return this.http.post<ApiResponse<Category>>(url, body, { withCredentials: true });
 }
 
+updateCategory(id: string, body: Partial<Category>): Observable<ApiResponse<Category>> {
+  const url = `${ApiService.BASE_URL}/categories/update/${id}`;
+  return this.http.patch<ApiResponse<Category>>(url, body, { withCredentials: true });
+}
+
 getAllCategories(): Observable<ApiResponse<Category[]>> {
   const url = `${ApiService.BASE_URL}/categories/all`;
   return this.http.get<ApiResponse<Category[]>>(url, { withCredentials: true });
@@ -93,11 +99,6 @@ getAllCategories(): Observable<ApiResponse<Category[]>> {
 getCategoryById(id: string): Observable<ApiResponse<Category>> {
   const url = `${ApiService.BASE_URL}/categories/${id}`;
   return this.http.get<ApiResponse<Category>>(url, { withCredentials: true });
-}
-
-updateCategory(id: string, body: Partial<Category>): Observable<ApiResponse<Category>> {
-  const url = `${ApiService.BASE_URL}/categories/update/${id}`;
-  return this.http.patch<ApiResponse<Category>>(url, body, { withCredentials: true });
 }
 
 deleteCategory(id: string): Observable<ApiResponse<null>> {
@@ -111,6 +112,11 @@ deleteCategory(id: string): Observable<ApiResponse<null>> {
     return this.http.post<ApiResponse<Supplier>>(url, body, { withCredentials: true });
   }
 
+  updateSupplier(id: string, body: Partial<Supplier>): Observable<ApiResponse<Supplier>> {
+    const url = `${ApiService.BASE_URL}/suppliers/update/${id}`;
+    return this.http.patch<ApiResponse<Supplier>>(url, body, { withCredentials: true });
+  }
+
   getAllSuppliers(): Observable<ApiResponse<Supplier[]>> {
     const url = `${ApiService.BASE_URL}/suppliers/all`;
     return this.http.get<ApiResponse<Supplier[]>>(url, { withCredentials: true });
@@ -121,15 +127,39 @@ deleteCategory(id: string): Observable<ApiResponse<null>> {
     return this.http.get<ApiResponse<Supplier>>(url, { withCredentials: true });
   }
 
-  updateSupplier(id: string, body: Partial<Supplier>): Observable<ApiResponse<Supplier>> {
-    const url = `${ApiService.BASE_URL}/suppliers/update/${id}`;
-    return this.http.patch<ApiResponse<Supplier>>(url, body, { withCredentials: true });
-  }
-
   deleteSupplier(id: string): Observable<ApiResponse<null>> {
     const url = `${ApiService.BASE_URL}/suppliers/delete/${id}`;
     return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
   }
+
+  /**PRODUICTS ENDPOINTS */
+  addProduct(product: Product, imageFile?: File): Observable<ApiResponse<Product>> {
+    const url = `${ApiService.BASE_URL}/products/save`;
+    const formData = buildProductFormData(product, imageFile)
+    return this.http.post<ApiResponse<Product>>(url, formData, { withCredentials: true});
+  }
+
+  updateProduct(product: Product, imageFile?: File): Observable<ApiResponse<Product>> {
+    const url = `${ApiService.BASE_URL}/products/update`;
+    const formData = buildProductFormData(product, imageFile);
+    return this.http.patch<ApiResponse<Product>>(url, formData, { withCredentials: true });
+  }
+
+  getAllProducts(): Observable<ApiResponse<Product[]>> {
+    const url = `${ApiService.BASE_URL}/products/all`;
+    return this.http.get<ApiResponse<Product[]>>(url, { withCredentials: true});
+  }
+
+  getProductById(id: string): Observable<ApiResponse<Product>> {
+    const url = `${ApiService.BASE_URL}/products/${id}`;
+    return this.http.get<ApiResponse<Product>>(url, { withCredentials: true });
+  }
+
+  deleteProduct(id: string): Observable<ApiResponse<null>> {
+    const url = `${ApiService.BASE_URL}/products/delete/${id}`;
+    return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
+  }
+
 
   // --- Exemplo de como fazer outras chamadas autenticadas ---
 
@@ -150,4 +180,19 @@ deleteCategory(id: string): Observable<ApiResponse<null>> {
     const url = `${ApiService.BASE_URL}/some-resource`;
     return this.http.post<any>(url, data, { withCredentials: true });
   }
+}
+
+function buildProductFormData(product: Product, imageFile?: File): FormData {
+  const formData = new FormData();
+  formData.append('name', product.name);
+  if (product.sku) formData.append('sku', product.sku);
+  formData.append('price', product.price.toString());
+  formData.append('stockQuantity', product.stockQuantity.toString());
+  formData.append('categoryId', product.categoryId!);
+  if (product.id) formData.append('productId', product.id);
+  formData.append('supplierId', product.supplierId!);
+  if (product.description) formData.append('description', product.description);
+  if (product.expiryDate) formData.append('expiryDate', product.expiryDate);
+  if (imageFile) formData.append('imageFile', imageFile);
+  return formData;
 }
