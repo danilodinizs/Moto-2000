@@ -2,6 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { Category } from '../interfaces/category';
+import { ApiResponse } from '../interfaces/api-response';
 
 
 // Interface para o status de autenticação retornado pelo backend
@@ -78,29 +79,29 @@ export class ApiService {
 }
 
   /**CATEGOTY ENDPOINTS */
-createCategory(body: any): Observable<any> {
+createCategory(body: Category): Observable<ApiResponse<Category>> {
 const url = `${ApiService.BASE_URL}/categories/add`;
-return this.http.post(url, body, { withCredentials: true });
+return this.http.post<ApiResponse<Category>>(url, body, { withCredentials: true });
 }
 
-getAllCategories(): Observable<Category[]> {
+getAllCategories(): Observable<ApiResponse<Category[]>> {
   const url = `${ApiService.BASE_URL}/categories/all`;
-  return this.http.get<any>(url, { withCredentials: true });
+  return this.http.get<ApiResponse<Category[]>>(url, { withCredentials: true });
 }
 
-getCategoryById(id: string): Observable<Category> {
+getCategoryById(id: string): Observable<ApiResponse<Category>> {
   const url = `${ApiService.BASE_URL}/categories/${id}`;
-  return this.http.get<any>(url, { withCredentials: true });
+  return this.http.get<ApiResponse<Category>>(url, { withCredentials: true });
 }
 
-updateCategory(id: string, body: any): Observable<any> {
+updateCategory(id: string, body: Partial<Category>): Observable<ApiResponse<Category>> {
   const url = `${ApiService.BASE_URL}/categories/update/${id}`;
-  return this.http.patch<any>(url, body, { withCredentials: true });
+  return this.http.patch<ApiResponse<Category>>(url, body, { withCredentials: true });
 }
 
-deleteCategory(id: string): Observable<void> {
+deleteCategory(id: string): Observable<ApiResponse<null>> {
   const url = `${ApiService.BASE_URL}/categories/delete/${id}`;
-  return this.http.delete<any>(url, { withCredentials: true });
+  return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
 }
 
 
