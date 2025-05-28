@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { Category } from '../interfaces/category';
 import { ApiResponse } from '../interfaces/api-response';
+import { Supplier } from '../interfaces/supplier';
 
 
 // Interface para o status de autenticação retornado pelo backend
@@ -104,6 +105,31 @@ deleteCategory(id: string): Observable<ApiResponse<null>> {
   return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
 }
 
+ /** SUPPLIER ENDPOINTS */
+  addSupplier(body: Supplier): Observable<ApiResponse<Supplier>> {
+    const url = `${ApiService.BASE_URL}/suppliers/save`;
+    return this.http.post<ApiResponse<Supplier>>(url, body, { withCredentials: true });
+  }
+
+  getAllSuppliers(): Observable<ApiResponse<Supplier[]>> {
+    const url = `${ApiService.BASE_URL}/suppliers/all`;
+    return this.http.get<ApiResponse<Supplier[]>>(url, { withCredentials: true });
+  }
+
+  getSupplierById(id: string): Observable<ApiResponse<Supplier>> {
+    const url = `${ApiService.BASE_URL}/suppliers/${id}`;
+    return this.http.get<ApiResponse<Supplier>>(url, { withCredentials: true });
+  }
+
+  updateSupplier(id: string, body: Partial<Supplier>): Observable<ApiResponse<Supplier>> {
+    const url = `${ApiService.BASE_URL}/suppliers/update/${id}`;
+    return this.http.patch<ApiResponse<Supplier>>(url, body, { withCredentials: true });
+  }
+
+  deleteSupplier(id: string): Observable<ApiResponse<null>> {
+    const url = `${ApiService.BASE_URL}/suppliers/delete/${id}`;
+    return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
+  }
 
   // --- Exemplo de como fazer outras chamadas autenticadas ---
 
