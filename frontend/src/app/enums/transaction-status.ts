@@ -1,0 +1,6 @@
+export enum TransactionStatus {
+  PENDENTE = 'PENDENTE',
+  PROCESSANDO = 'PROCESSANDO',
+  CONCLUÍDO = 'CONCLUÍDO',
+  CANCELADO = 'CANCELADO'
+}
