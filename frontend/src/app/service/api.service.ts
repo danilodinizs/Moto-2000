@@ -9,6 +9,7 @@ import { User } from '../interfaces/user';
 import { UserRole } from '../enums/user-role';
 import { Motorcycle } from '../interfaces/motorcycle';
 import { ServiceOrder } from '../interfaces/service-order';
+import { LoginRequest } from '../interfaces/login-request';
 
 // Interface para o status de autenticação retornado pelo backend
 interface AuthStatus {
@@ -55,9 +56,9 @@ export class ApiService {
     return this.http.post<ApiResponse<User>>(url, body);
   }
 
-  loginUser(body: User): Observable<ApiResponse<User>> {
+  loginUser(body: LoginRequest): Observable<ApiResponse<LoginRequest>> {
     const url = `${ApiService.BASE_URL}/auth/login`;
-    return this.http.post<ApiResponse<User>>(url, { withCredentials: true });
+    return this.http.post<ApiResponse<LoginRequest>>(url, body, { withCredentials: true });
   }
 
   logout(): Observable<ApiResponse<null>> {
