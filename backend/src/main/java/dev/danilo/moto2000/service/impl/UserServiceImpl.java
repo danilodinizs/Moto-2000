@@ -99,9 +99,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getCurrentLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String useername = authentication.getName();
+        String username = authentication.getName();
 
-        return repository.findByUsername(useername)
+        return repository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
     }
 
