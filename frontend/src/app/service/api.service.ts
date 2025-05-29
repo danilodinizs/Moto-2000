@@ -10,6 +10,9 @@ import { UserRole } from '../enums/user-role';
 import { Motorcycle } from '../interfaces/motorcycle';
 import { ServiceOrder } from '../interfaces/service-order';
 import { LoginRequest } from '../interfaces/login-request';
+import { Client } from '../interfaces/client';
+import { id } from '@swimlane/ngx-charts';
+import { Transaction } from '../interfaces/transaction';
 
 // Interface para o status de autenticação retornado pelo backend
 interface AuthStatus {
@@ -276,6 +279,55 @@ export class ApiService {
 
   deleteServiceOrder(id: string): Observable<ApiResponse<null>> {
     const url = `${ApiService.BASE_URL}/service-orders/delete/${id}`;
+    return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
+  }
+
+ /**CLIENT ENDPOINTS */
+  createClient(body: Client): Observable<ApiResponse<Client>> {
+    const url = `${ApiService.BASE_URL}/clients/add`;
+    return this.http.post<ApiResponse<Client>>(url, body, {
+      withCredentials: true,
+    });
+  }
+
+  updateClient(
+    id: string,
+    body: Partial<Client>
+  ): Observable<ApiResponse<Client>> {
+    const url = `${ApiService.BASE_URL}/clients/update/${id}`;
+    return this.http.patch<ApiResponse<Client>>(url, body, {
+      withCredentials: true,
+    });
+  }
+
+  getAllClients(): Observable<ApiResponse<Client[]>> {
+    const url = `${ApiService.BASE_URL}/clients/all`;
+    return this.http.get<ApiResponse<Client[]>>(url, {
+      withCredentials: true,
+    });
+  }
+
+  getClientTransactions(id: string): Observable<ApiResponse<Transaction[]>> {
+    const url = `${ApiService.BASE_URL}/clients/transactions/${id}`;
+    return this.http.get<ApiResponse<Transaction[]>>(url, {
+      withCredentials: true,
+    });
+  }
+
+  getClientMotorcycle(id: string): Observable<ApiResponse<Motorcycle[]>> {
+    const url = `${ApiService.BASE_URL}/clients/motorcycles/${id}`;
+    return this.http.get<ApiResponse<Motorcycle[]>>(url, {
+      withCredentials: true,
+    });
+  }
+
+  getClientById(id: string): Observable<ApiResponse<Client>> {
+    const url = `${ApiService.BASE_URL}/clients/${id}`;
+    return this.http.get<ApiResponse<Client>>(url, { withCredentials: true });
+  }
+
+  deleteClient(id: string): Observable<ApiResponse<null>> {
+    const url = `${ApiService.BASE_URL}/clients/delete/${id}`;
     return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
   }
 
