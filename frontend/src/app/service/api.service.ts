@@ -13,6 +13,8 @@ import { LoginRequest } from '../interfaces/login-request';
 import { Client } from '../interfaces/client';
 import { id } from '@swimlane/ngx-charts';
 import { Transaction } from '../interfaces/transaction';
+import { TransactionRequest } from '../interfaces/transaction-request';
+import { TransactionStatus } from '../enums/transaction-status';
 
 // Interface para o status de autenticação retornado pelo backend
 interface AuthStatus {
@@ -61,7 +63,9 @@ export class ApiService {
 
   loginUser(body: LoginRequest): Observable<ApiResponse<LoginRequest>> {
     const url = `${ApiService.BASE_URL}/auth/login`;
-    return this.http.post<ApiResponse<LoginRequest>>(url, body, { withCredentials: true });
+    return this.http.post<ApiResponse<LoginRequest>>(url, body, {
+      withCredentials: true,
+    });
   }
 
   logout(): Observable<ApiResponse<null>> {
@@ -239,16 +243,22 @@ export class ApiService {
 
   getMotorcycleById(id: string): Observable<ApiResponse<Motorcycle>> {
     const url = `${ApiService.BASE_URL}/motorcycles/${id}`;
-    return this.http.get<ApiResponse<Motorcycle>>(url, { withCredentials: true });
+    return this.http.get<ApiResponse<Motorcycle>>(url, {
+      withCredentials: true,
+    });
   }
 
   deleteMotorcycle(id: string): Observable<ApiResponse<Motorcycle>> {
     const url = `${ApiService.BASE_URL}/motorcycles/delete/${id}`;
-    return this.http.delete<ApiResponse<Motorcycle>>(url, { withCredentials: true });
+    return this.http.delete<ApiResponse<Motorcycle>>(url, {
+      withCredentials: true,
+    });
   }
 
   /**SERVICE ORDER ENDPOINTS */
-  createServiceOrder(body: ServiceOrder): Observable<ApiResponse<ServiceOrder>> {
+  createServiceOrder(
+    body: ServiceOrder
+  ): Observable<ApiResponse<ServiceOrder>> {
     const url = `${ApiService.BASE_URL}/service-orders/save`;
     return this.http.post<ApiResponse<ServiceOrder>>(url, body, {
       withCredentials: true,
@@ -274,7 +284,9 @@ export class ApiService {
 
   getServiceOrderById(id: string): Observable<ApiResponse<ServiceOrder>> {
     const url = `${ApiService.BASE_URL}/service-orders/${id}`;
-    return this.http.get<ApiResponse<ServiceOrder>>(url, { withCredentials: true });
+    return this.http.get<ApiResponse<ServiceOrder>>(url, {
+      withCredentials: true,
+    });
   }
 
   deleteServiceOrder(id: string): Observable<ApiResponse<null>> {
@@ -282,7 +294,7 @@ export class ApiService {
     return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
   }
 
- /**CLIENT ENDPOINTS */
+  /**CLIENT ENDPOINTS */
   createClient(body: Client): Observable<ApiResponse<Client>> {
     const url = `${ApiService.BASE_URL}/clients/add`;
     return this.http.post<ApiResponse<Client>>(url, body, {
@@ -331,24 +343,67 @@ export class ApiService {
     return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
   }
 
-  // --- Exemplo de como fazer outras chamadas autenticadas ---
-
-  /**
-   * Exemplo de chamada GET para um recurso protegido.
-   * O cookie HttpOnly será enviado automaticamente pelo navegador.
-   */
-  getSomeProtectedData(): Observable<any> {
-    const url = `${ApiService.BASE_URL}/some-resource`;
-    return this.http.get<any>(url, { withCredentials: true });
+  /** TRANSACTION ENDPOINTS */
+  purchase(body: TransactionRequest): Observable<ApiResponse<Transaction>> {
+    const url = `${ApiService.BASE_URL}/transactions/purchase`;
+    return this.http.post<ApiResponse<Transaction>>(url, body, {
+      withCredentials: true,
+    });
   }
 
-  /**
-   * Exemplo de chamada POST para um recurso protegido.
-   * O cookie HttpOnly será enviado automaticamente pelo navegador.
-   */
-  postSomeProtectedData(data: any): Observable<any> {
-    const url = `${ApiService.BASE_URL}/some-resource`;
-    return this.http.post<any>(url, data, { withCredentials: true });
+  sell(body: TransactionRequest): Observable<ApiResponse<Transaction>> {
+    const url = `${ApiService.BASE_URL}/transactions/sell`;
+    return this.http.post<ApiResponse<Transaction>>(url, body, {
+      withCredentials: true,
+    });
+  }
+
+  returnToSupplier(body: TransactionRequest): Observable<ApiResponse<null>> {
+    const url = `${ApiService.BASE_URL}/transactions/return`;
+    return this.http.post<ApiResponse<null>>(url, body, {
+      withCredentials: true,
+    });
+  }
+
+  getAllTransactions(
+    page = 0,
+    size = 1000,
+    searchText?: string
+  ): Observable<ApiResponse<Transaction[]>> {
+    let url = `${ApiService.BASE_URL}/transactions/all?page=${page}&size=${size}`;
+    if (searchText) {
+      url += `&searchText=${encodeURIComponent(searchText)}`;
+    }
+    return this.http.get<ApiResponse<Transaction[]>>(url, {
+      withCredentials: true,
+    });
+  }
+
+  getTransactionById(id: string): Observable<ApiResponse<Transaction>> {
+    const url = `${ApiService.BASE_URL}/transactions/${id}`;
+    return this.http.get<ApiResponse<Transaction>>(url, {
+      withCredentials: true,
+    });
+  }
+
+  getTransactionsByMonthAndYear(
+    month: number,
+    year: number
+  ): Observable<ApiResponse<Transaction[]>> {
+    const url = `${ApiService.BASE_URL}/transactions/by-month-year?month=${month}&year=${year}`;
+    return this.http.get<ApiResponse<Transaction[]>>(url, {
+      withCredentials: true,
+    });
+  }
+
+  updateTransactionStatus(
+    id: string,
+    status: TransactionStatus
+  ): Observable<ApiResponse<null>> {
+    const url = `${ApiService.BASE_URL}/transactions/update/${id}`;
+    return this.http.patch<ApiResponse<null>>(url, status, {
+      withCredentials: true,
+    });
   }
 }
 
