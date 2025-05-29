@@ -8,6 +8,7 @@ import { Product } from '../interfaces/product';
 import { User } from '../interfaces/user';
 import { UserRole } from '../enums/user-role';
 import { Motorcycle } from '../interfaces/motorcycle';
+import { ServiceOrder } from '../interfaces/service-order';
 
 // Interface para o status de autenticação retornado pelo backend
 interface AuthStatus {
@@ -133,7 +134,7 @@ export class ApiService {
   }
 
   /** SUPPLIER ENDPOINTS */
-  addSupplier(body: Supplier): Observable<ApiResponse<Supplier>> {
+  createSupplier(body: Supplier): Observable<ApiResponse<Supplier>> {
     const url = `${ApiService.BASE_URL}/suppliers/save`;
     return this.http.post<ApiResponse<Supplier>>(url, body, {
       withCredentials: true,
@@ -168,7 +169,7 @@ export class ApiService {
   }
 
   /**PRODUICTS ENDPOINTS */
-  addProduct(
+  createProduct(
     product: Product,
     imageFile?: File
   ): Observable<ApiResponse<Product>> {
@@ -208,7 +209,7 @@ export class ApiService {
   }
 
   /** MOTORCYCLE ENDPOINTS */
-  addMotorcycle(body: Motorcycle): Observable<ApiResponse<Motorcycle>> {
+  createMotorcycle(body: Motorcycle): Observable<ApiResponse<Motorcycle>> {
     const url = `${ApiService.BASE_URL}/motorcycles/save`;
     return this.http.post<ApiResponse<Motorcycle>>(url, body, {
       withCredentials: true,
@@ -242,6 +243,40 @@ export class ApiService {
     return this.http.delete<ApiResponse<Motorcycle>>(url, { withCredentials: true });
   }
 
+  /**SERVICE ORDER ENDPOINTS */
+  createServiceOrder(body: ServiceOrder): Observable<ApiResponse<ServiceOrder>> {
+    const url = `${ApiService.BASE_URL}/service-orders/save`;
+    return this.http.post<ApiResponse<ServiceOrder>>(url, body, {
+      withCredentials: true,
+    });
+  }
+
+  updateServiceOrder(
+    id: string,
+    body: Partial<ServiceOrder>
+  ): Observable<ApiResponse<ServiceOrder>> {
+    const url = `${ApiService.BASE_URL}/service-orders/update/${id}`;
+    return this.http.patch<ApiResponse<ServiceOrder>>(url, body, {
+      withCredentials: true,
+    });
+  }
+
+  getAllServiceOrders(): Observable<ApiResponse<ServiceOrder[]>> {
+    const url = `${ApiService.BASE_URL}/service-orders/all`;
+    return this.http.get<ApiResponse<ServiceOrder[]>>(url, {
+      withCredentials: true,
+    });
+  }
+
+  getServiceOrderById(id: string): Observable<ApiResponse<ServiceOrder>> {
+    const url = `${ApiService.BASE_URL}/service-orders/${id}`;
+    return this.http.get<ApiResponse<ServiceOrder>>(url, { withCredentials: true });
+  }
+
+  deleteServiceOrder(id: string): Observable<ApiResponse<null>> {
+    const url = `${ApiService.BASE_URL}/service-orders/delete/${id}`;
+    return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
+  }
 
   // --- Exemplo de como fazer outras chamadas autenticadas ---
 
