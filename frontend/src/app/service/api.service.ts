@@ -7,6 +7,7 @@ import { Supplier } from '../interfaces/supplier';
 import { Product } from '../interfaces/product';
 import { User } from '../interfaces/user';
 import { UserRole } from '../enums/user-role';
+import { Motorcycle } from '../interfaces/motorcycle';
 
 // Interface para o status de autenticação retornado pelo backend
 interface AuthStatus {
@@ -205,6 +206,42 @@ export class ApiService {
     const url = `${ApiService.BASE_URL}/products/delete/${id}`;
     return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
   }
+
+  /** MOTORCYCLE ENDPOINTS */
+  addMotorcycle(body: Motorcycle): Observable<ApiResponse<Motorcycle>> {
+    const url = `${ApiService.BASE_URL}/motorcycles/save`;
+    return this.http.post<ApiResponse<Motorcycle>>(url, body, {
+      withCredentials: true,
+    });
+  }
+
+  updateMotorcycle(
+    id: string,
+    body: Partial<Motorcycle>
+  ): Observable<ApiResponse<Motorcycle>> {
+    const url = `${ApiService.BASE_URL}/motorcycles/update/${id}`;
+    return this.http.patch<ApiResponse<Motorcycle>>(url, body, {
+      withCredentials: true,
+    });
+  }
+
+  getAllMotorcycles(): Observable<ApiResponse<Motorcycle[]>> {
+    const url = `${ApiService.BASE_URL}/motorcycles/all`;
+    return this.http.get<ApiResponse<Motorcycle[]>>(url, {
+      withCredentials: true,
+    });
+  }
+
+  getMotorcycleById(id: string): Observable<ApiResponse<Motorcycle>> {
+    const url = `${ApiService.BASE_URL}/motorcycles/${id}`;
+    return this.http.get<ApiResponse<Motorcycle>>(url, { withCredentials: true });
+  }
+
+  deleteMotorcycle(id: string): Observable<ApiResponse<Motorcycle>> {
+    const url = `${ApiService.BASE_URL}/motorcycles/delete/${id}`;
+    return this.http.delete<ApiResponse<Motorcycle>>(url, { withCredentials: true });
+  }
+
 
   // --- Exemplo de como fazer outras chamadas autenticadas ---
 

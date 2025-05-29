@@ -2,7 +2,7 @@ import { Color } from "../enums/color";
 import { MotorcycleType } from "../enums/motorcycle-type";
 
 export interface Motorcycle {
-  id?: string;
+  id: string;
   licensePlate: string;
   model: string;
   year: number;
