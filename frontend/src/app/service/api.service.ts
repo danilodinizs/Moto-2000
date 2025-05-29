@@ -5,7 +5,8 @@ import { Category } from '../interfaces/category';
 import { ApiResponse } from '../interfaces/api-response';
 import { Supplier } from '../interfaces/supplier';
 import { Product } from '../interfaces/product';
-
+import { User } from '../interfaces/user';
+import { UserRole } from '../enums/user-role';
 
 // Interface para o status de autenticação retornado pelo backend
 interface AuthStatus {
@@ -14,112 +15,145 @@ interface AuthStatus {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
-
   private static BASE_URL = 'http://localhost:2904/v1/api'; // Mantenha sua URL base
 
   authStatusChange = new EventEmitter<void>();
 
-  constructor(private http: HttpClient) { }
-
+  constructor(private http: HttpClient) {}
 
   private getAuthStatus(): Observable<AuthStatus> {
     const url = `${ApiService.BASE_URL}/auth/status`; // Endpoint a ser criado no backend
     return this.http.get<AuthStatus>(url, { withCredentials: true }).pipe(
-      catchError(error => {
+      catchError((error) => {
         console.error('Erro ao buscar status de autenticação:', error);
         return of({ isAuthenticated: false, role: null });
       })
     );
   }
 
-
   isAuthenticated(): Observable<boolean> {
-    return this.getAuthStatus().pipe(
-      map(status => status.isAuthenticated)
-    );
+    return this.getAuthStatus().pipe(map((status) => status.isAuthenticated));
   }
 
   isAdmin(): Observable<boolean> {
     return this.getAuthStatus().pipe(
-      map(status => status.isAuthenticated && status.role === 'MANAGER')
+      map(
+        (status) => status.isAuthenticated && status.role === UserRole.MANAGER
+      )
     );
   }
 
+  /***AUTH & USERS API METHODS */
 
-/***AUTH & USERS API METHODS */
-
-  registerUser(body: any): Observable<any> {
+  registerUser(body: User): Observable<ApiResponse<User>> {
     const url = `${ApiService.BASE_URL}/auth/register`;
-    return this.http.post(url, body);
+    return this.http.post<ApiResponse<User>>(url, body);
   }
 
-  loginUser(body: any): Observable<any> {
+  loginUser(body: User): Observable<ApiResponse<User>> {
     const url = `${ApiService.BASE_URL}/auth/login`;
-    return this.http.post(url, { withCredentials: true });
+    return this.http.post<ApiResponse<User>>(url, { withCredentials: true });
   }
 
-  logout(): Observable<any> {
+  logout(): Observable<ApiResponse<null>> {
     const url = `${ApiService.BASE_URL}/auth/logout`;
-    return this.http.post(url, {}, { withCredentials: true }).pipe(
-      tap(() => {
-        this.authStatusChange.emit();
-      }),
-      catchError(error => {
-        console.error('Erro ao fazer logout:', error);
-        this.authStatusChange.emit();
-        return throwError(() => error);
-      })
-    );
+    return this.http
+      .post<ApiResponse<null>>(url, {}, { withCredentials: true })
+      .pipe(
+        tap(() => {
+          this.authStatusChange.emit();
+        }),
+        catchError((error) => {
+          console.error('Erro ao fazer logout:', error);
+          this.authStatusChange.emit();
+          return throwError(() => error);
+        })
+      );
   }
 
-  getLoggedInUserInfo(): Observable<any> {
+  getLoggedInUserInfo(): Observable<ApiResponse<User>> {
     const url = `${ApiService.BASE_URL}/users/current`;
-    return this.http.get<any>(url, { withCredentials: true } );
-}
+    return this.http.get<ApiResponse<User>>(url, { withCredentials: true });
+  }
+
+  getAllUsers(): Observable<ApiResponse<User[]>> {
+    const url = `${ApiService.BASE_URL}/users/all`;
+    return this.http.get<ApiResponse<User[]>>(url, { withCredentials: true });
+  }
+
+  updateUser(id: string, body: Partial<User>): Observable<ApiResponse<User>> {
+    const url = `${ApiService.BASE_URL}/users/update/${id}`;
+    return this.http.patch<ApiResponse<User>>(url, body, {
+      withCredentials: true,
+    });
+  }
+
+  deleteUser(id: string): Observable<ApiResponse<null>> {
+    const url = `${ApiService.BASE_URL}/users/delete/${id}`;
+    return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
+  }
 
   /**CATEGOTY ENDPOINTS */
-createCategory(body: Category): Observable<ApiResponse<Category>> {
-const url = `${ApiService.BASE_URL}/categories/add`;
-return this.http.post<ApiResponse<Category>>(url, body, { withCredentials: true });
-}
-
-updateCategory(id: string, body: Partial<Category>): Observable<ApiResponse<Category>> {
-  const url = `${ApiService.BASE_URL}/categories/update/${id}`;
-  return this.http.patch<ApiResponse<Category>>(url, body, { withCredentials: true });
-}
-
-getAllCategories(): Observable<ApiResponse<Category[]>> {
-  const url = `${ApiService.BASE_URL}/categories/all`;
-  return this.http.get<ApiResponse<Category[]>>(url, { withCredentials: true });
-}
-
-getCategoryById(id: string): Observable<ApiResponse<Category>> {
-  const url = `${ApiService.BASE_URL}/categories/${id}`;
-  return this.http.get<ApiResponse<Category>>(url, { withCredentials: true });
-}
-
-deleteCategory(id: string): Observable<ApiResponse<null>> {
-  const url = `${ApiService.BASE_URL}/categories/delete/${id}`;
-  return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
-}
-
- /** SUPPLIER ENDPOINTS */
-  addSupplier(body: Supplier): Observable<ApiResponse<Supplier>> {
-    const url = `${ApiService.BASE_URL}/suppliers/save`;
-    return this.http.post<ApiResponse<Supplier>>(url, body, { withCredentials: true });
+  createCategory(body: Category): Observable<ApiResponse<Category>> {
+    const url = `${ApiService.BASE_URL}/categories/add`;
+    return this.http.post<ApiResponse<Category>>(url, body, {
+      withCredentials: true,
+    });
   }
 
-  updateSupplier(id: string, body: Partial<Supplier>): Observable<ApiResponse<Supplier>> {
+  updateCategory(
+    id: string,
+    body: Partial<Category>
+  ): Observable<ApiResponse<Category>> {
+    const url = `${ApiService.BASE_URL}/categories/update/${id}`;
+    return this.http.patch<ApiResponse<Category>>(url, body, {
+      withCredentials: true,
+    });
+  }
+
+  getAllCategories(): Observable<ApiResponse<Category[]>> {
+    const url = `${ApiService.BASE_URL}/categories/all`;
+    return this.http.get<ApiResponse<Category[]>>(url, {
+      withCredentials: true,
+    });
+  }
+
+  getCategoryById(id: string): Observable<ApiResponse<Category>> {
+    const url = `${ApiService.BASE_URL}/categories/${id}`;
+    return this.http.get<ApiResponse<Category>>(url, { withCredentials: true });
+  }
+
+  deleteCategory(id: string): Observable<ApiResponse<null>> {
+    const url = `${ApiService.BASE_URL}/categories/delete/${id}`;
+    return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
+  }
+
+  /** SUPPLIER ENDPOINTS */
+  addSupplier(body: Supplier): Observable<ApiResponse<Supplier>> {
+    const url = `${ApiService.BASE_URL}/suppliers/save`;
+    return this.http.post<ApiResponse<Supplier>>(url, body, {
+      withCredentials: true,
+    });
+  }
+
+  updateSupplier(
+    id: string,
+    body: Partial<Supplier>
+  ): Observable<ApiResponse<Supplier>> {
     const url = `${ApiService.BASE_URL}/suppliers/update/${id}`;
-    return this.http.patch<ApiResponse<Supplier>>(url, body, { withCredentials: true });
+    return this.http.patch<ApiResponse<Supplier>>(url, body, {
+      withCredentials: true,
+    });
   }
 
   getAllSuppliers(): Observable<ApiResponse<Supplier[]>> {
     const url = `${ApiService.BASE_URL}/suppliers/all`;
-    return this.http.get<ApiResponse<Supplier[]>>(url, { withCredentials: true });
+    return this.http.get<ApiResponse<Supplier[]>>(url, {
+      withCredentials: true,
+    });
   }
 
   getSupplierById(id: string): Observable<ApiResponse<Supplier>> {
@@ -133,21 +167,33 @@ deleteCategory(id: string): Observable<ApiResponse<null>> {
   }
 
   /**PRODUICTS ENDPOINTS */
-  addProduct(product: Product, imageFile?: File): Observable<ApiResponse<Product>> {
+  addProduct(
+    product: Product,
+    imageFile?: File
+  ): Observable<ApiResponse<Product>> {
     const url = `${ApiService.BASE_URL}/products/save`;
-    const formData = buildProductFormData(product, imageFile)
-    return this.http.post<ApiResponse<Product>>(url, formData, { withCredentials: true});
+    const formData = buildProductFormData(product, imageFile);
+    return this.http.post<ApiResponse<Product>>(url, formData, {
+      withCredentials: true,
+    });
   }
 
-  updateProduct(product: Product, imageFile?: File): Observable<ApiResponse<Product>> {
+  updateProduct(
+    product: Product,
+    imageFile?: File
+  ): Observable<ApiResponse<Product>> {
     const url = `${ApiService.BASE_URL}/products/update`;
     const formData = buildProductFormData(product, imageFile);
-    return this.http.patch<ApiResponse<Product>>(url, formData, { withCredentials: true });
+    return this.http.patch<ApiResponse<Product>>(url, formData, {
+      withCredentials: true,
+    });
   }
 
   getAllProducts(): Observable<ApiResponse<Product[]>> {
     const url = `${ApiService.BASE_URL}/products/all`;
-    return this.http.get<ApiResponse<Product[]>>(url, { withCredentials: true});
+    return this.http.get<ApiResponse<Product[]>>(url, {
+      withCredentials: true,
+    });
   }
 
   getProductById(id: string): Observable<ApiResponse<Product>> {
@@ -159,7 +205,6 @@ deleteCategory(id: string): Observable<ApiResponse<null>> {
     const url = `${ApiService.BASE_URL}/products/delete/${id}`;
     return this.http.delete<ApiResponse<null>>(url, { withCredentials: true });
   }
-
 
   // --- Exemplo de como fazer outras chamadas autenticadas ---
 
