@@ -1,7 +1,9 @@
 <div class="dashboard-layout">
   <!-- SIDEBAR-->
   <div class="sidebar">
-    <h1 class="moto2000">Moto 2000</h1>
+    <div class="logo-container">
+    <img src="assets/images/logo.png" alt="Moto 2000 Logo" class="logo" />
+    </div>
     <ul class="nav-links">
       <ng-container *ngIf="(isAuthenticated$ | async) === true; else loggedOut">
         <!-- Usuário autenticado -->
