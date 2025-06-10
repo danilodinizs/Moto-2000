@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
             Response conflictResponse = Response.builder()
                     .status(409)
-                    .message("Este usernamwe já existe!")
+                    .message("Este username já existe!")
                     .build();
             throw new DataAlreadyExistsException(conflictResponse);
         };
