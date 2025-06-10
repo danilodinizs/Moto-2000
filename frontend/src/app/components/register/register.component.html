@@ -1,23 +1,35 @@
 <div class="auth-container">
   <h2>Registrar</h2>
-  <p *ngIf="message" class="message">{{ message }}</p>
+
+  <p *ngIf="message" class="message" role="alert">{{ message }}</p>
 
   <form (ngSubmit)="handleSubmit()">
-    <input
-      type="text"
-      placeholder="Usuário"
-      [(ngModel)]="formData.username"
-      name="name"
-      required
-    />
-    <input
-      type="password"
-      placeholder="Senha"
-      [(ngModel)]="formData.password"
-      name="password"
-      required
-    />
+    <div class="form-group">
+      <label for="username">Usuário</label>
+      <input
+        id="username"
+        type="text"
+        placeholder="Digite seu nome de usuário"
+        [(ngModel)]="formData.username"
+        name="username"
+        required
+        autocomplete="username" />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Senha</label>
+      <input
+        id="password"
+        type="password"
+        placeholder="Crie uma senha forte"
+        [(ngModel)]="formData.password"
+        name="password"
+        required
+        autocomplete="new-password" />
+    </div>
+
     <button type="submit">Registrar</button>
   </form>
-  <p>Já tem uma conta?<a routerLink="/login" routerLinkActive="router-link-active" > Login</a></p>
+
+  <p>Já tem uma conta? <a routerLink="/login">Faça o login</a></p>
 </div>
