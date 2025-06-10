@@ -13,7 +13,7 @@
         <li><a routerLink="/sell">Venda</a></li>
         <li><a routerLink="/purchase">Compra</a></li>
         <li><a routerLink="/current">Conta</a></li>
-        <li><a (click)="logout()">Logout</a></li>
+        <li class="logout-item"><a (click)="logout()">Sair</a></li>
 
         <!-- Verifica se é admin -->
         <ng-container *ngIf="(isAdmin$ | async) === true">
