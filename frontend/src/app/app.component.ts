@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ApiService } from './service/api.service';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { Observable, startWith } from 'rxjs';
+import { Component } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { Observable } from 'rxjs';
+import { ApiService } from './service/api.service'; 
 
 @Component({
   selector: 'app-root',
@@ -14,23 +14,15 @@ import { Observable, startWith } from 'rxjs';
 export class AppComponent {
   title = 'Moto 2000';
 
-  isAuthenticated$!: Observable<boolean>;
-  isAdmin$!: Observable<boolean>;
+  isAuthenticated$: Observable<boolean>;
+  isAdmin$: Observable<boolean>;
 
-  constructor(
-    private apiService: ApiService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
-
-  ngOnInit(): void {
-    this.isAuthenticated$ = this.apiService.isAuthenticated();
-    this.isAdmin$ = this.apiService.isAdmin();
+  constructor(private apiService: ApiService) {
+    this.isAuthenticated$ = this.apiService.isAuthenticated$;
+    this.isAdmin$ = this.apiService.isAdmin$;
   }
 
   logout(): void {
     this.apiService.logout();
-    this.router.navigate(['/login']);
-    this.cdr.detectChanges();
   }
 }
