@@ -54,7 +54,6 @@ export const routes: Routes = [
     path: 'service-order',
     component: ServiceOrderComponent,
     canActivate: [GuardService],
-    data: { requiresAdmin: true },
   },
   {
     path: 'edit-service-order/:serviceOrderId',
