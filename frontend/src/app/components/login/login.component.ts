@@ -1,7 +1,8 @@
+
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../service/api.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -12,12 +13,27 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
+export class LoginComponent implements OnInit {
 
-export class LoginComponent {
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(
+    private apiService: ApiService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   formData: any = { username: '', password: '' };
   message: string | null = null;
+  private returnUrl: string = '/dashboard';
+
+  ngOnInit() {
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+
+    this.apiService.isAuthenticated$.subscribe(isAuthenticated => {
+      if (isAuthenticated) {
+        this.router.navigate([this.returnUrl]);
+      }
+    });
+  }
 
   async handleLogin() {
     if (!this.formData.username || !this.formData.password) {
@@ -27,12 +43,13 @@ export class LoginComponent {
 
     try {
       await firstValueFrom(this.apiService.loginUser(this.formData));
-
-      this.router.navigate(["/dashboard"]);
+      setTimeout(() => {
+        this.router.navigate([this.returnUrl]);
+      }, 100);
 
     } catch (error: any) {
-        console.error("Erro no login:", error);
-        this.showMessage(error?.error?.message || "Falha no login. Verifique suas credenciais.");
+      console.error("Erro no login:", error);
+      this.showMessage(error?.error?.message || "Falha no login. Verifique suas credenciais.");
     }
   }
 
