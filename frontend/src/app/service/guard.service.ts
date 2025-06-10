@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map, take, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,29 +17,34 @@ export class GuardService implements CanActivate {
 
     const requiresAdmin = route.data['requiresAdmin'] || false;
 
-    if (requiresAdmin) {
-      return this.apiService.isAdmin$.pipe(
-        take(1),
-        map(isAdmin => {
-          if (isAdmin) {
-            return true;
-          }
+    return this.apiService.isAuthenticated$.pipe(
+      take(1),
+      switchMap(isAuthenticated => {
+        if (!isAuthenticated) {
+          // Se não estiver autenticado, redireciona para login
           this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-          return false;
-        })
-      );
-    } else {
-      return this.apiService.isAuthenticated$.pipe(
-        take(1),
-        map(isAuthenticated => {
-          if (isAuthenticated) {
-            return true;
-          }
+          return [false];
+        }
 
-          this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-          return false;
-        })
-      );
-    }
+        if (requiresAdmin) {
+          // Se requer admin, verifica se é admin
+          return this.apiService.isAdmin$.pipe(
+            take(1),
+            map(isAdmin => {
+              if (isAdmin) {
+                return true;
+              }
+              // Se não for admin mas estiver autenticado, redireciona para dashboard
+              this.router.navigate(['/dashboard']);
+              return false;
+            })
+          );
+        } else {
+          // Se não requer admin e está autenticado, permite acesso
+          return [true];
+        }
+      })
+    );
   }
 }
+
