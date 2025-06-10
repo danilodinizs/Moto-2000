@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { Category } from '../interfaces/category';
 import { ApiResponse } from '../interfaces/api-response';
 import { Supplier } from '../interfaces/supplier';
@@ -15,6 +15,7 @@ import { id } from '@swimlane/ngx-charts';
 import { Transaction } from '../interfaces/transaction';
 import { TransactionRequest } from '../interfaces/transaction-request';
 import { TransactionStatus } from '../enums/transaction-status';
+import { Router } from '@angular/router';
 
 // Interface para o status de autenticação retornado pelo backend
 interface AuthStatus {
@@ -26,62 +27,62 @@ interface AuthStatus {
   providedIn: 'root',
 })
 export class ApiService {
-  private static BASE_URL = 'http://localhost:2904/v1/api'; // Mantenha sua URL base
+  private static BASE_URL = 'http://localhost:2904/v1/api';
 
-  authStatusChange = new EventEmitter<void>();
+  // MUDANÇA 1: Substituindo EventEmitter por BehaviorSubject
+  // Ele armazena o último estado de autenticação e notifica os componentes sobre mudanças.
+  private authStatusSubject = new BehaviorSubject<AuthStatus>({ isAuthenticated: false, role: null });
 
-  constructor(private http: HttpClient) {}
+  // MUDANÇA 2: Observables públicos derivados do BehaviorSubject.
+  // Eles não fazem novas chamadas de API, apenas leem o valor atual do 'authStatusSubject'.
+  public isAuthenticated$: Observable<boolean> = this.authStatusSubject.asObservable().pipe(map(status => status.isAuthenticated));
+  public isAdmin$: Observable<boolean> = this.authStatusSubject.asObservable().pipe(map(status => status.isAuthenticated && status.role === UserRole.MANAGER));
 
-  private getAuthStatus(): Observable<AuthStatus> {
-    const url = `${ApiService.BASE_URL}/auth/status`; // Endpoint a ser criado no backend
+  constructor(private http: HttpClient, private router: Router) {
+    // Verifica o status de autenticação assim que o serviço é iniciado.
+    this.checkAuthStatus().subscribe();
+  }
+
+  // MUDANÇA 3: Método para verificar e ATUALIZAR o estado centralizado.
+  checkAuthStatus(): Observable<AuthStatus> {
+    const url = `${ApiService.BASE_URL}/auth/status`;
     return this.http.get<AuthStatus>(url, { withCredentials: true }).pipe(
-      catchError((error) => {
-        console.error('Erro ao buscar status de autenticação:', error);
-        return of({ isAuthenticated: false, role: null });
+      catchError(() => of({ isAuthenticated: false, role: null })),
+      tap(status => this.authStatusSubject.next(status)) // Atualiza o BehaviorSubject com a resposta
+    );
+  }
+
+  /*** MÉTODOS DE AUTH ATUALIZADOS ***/
+
+
+
+  loginUser(body: LoginRequest): Observable<any> {
+    const url = `${ApiService.BASE_URL}/auth/login`;
+    return this.http.post(url, body, { withCredentials: true }).pipe(
+      // Após o login bem-sucedido, verificamos novamente o status para atualizar o estado.
+      tap(() => {
+        this.checkAuthStatus().subscribe();
       })
     );
   }
 
-  isAuthenticated(): Observable<boolean> {
-    return this.getAuthStatus().pipe(map((status) => status.isAuthenticated));
+  logout(): void {
+    const url = `${ApiService.BASE_URL}/auth/logout`;
+    this.http.post(url, {}, { withCredentials: true }).pipe(
+      catchError(error => {
+        console.error('Erro no logout do backend, mas forçando logout no frontend.', error);
+        return of(null); // Continua o fluxo mesmo se o backend falhar
+      })
+    ).subscribe(() => {
+      // MUDANÇA 4: A lógica de atualização de estado e redirecionamento agora está aqui.
+      this.authStatusSubject.next({ isAuthenticated: false, role: null }); // Atualiza o estado localmente
+      this.router.navigate(['/login']); // Navega APÓS a conclusão da chamada
+    });
   }
-
-  isAdmin(): Observable<boolean> {
-    return this.getAuthStatus().pipe(
-      map(
-        (status) => status.isAuthenticated && status.role === UserRole.MANAGER
-      )
-    );
-  }
-
-  /***AUTH & USERS API METHODS */
 
   registerUser(body: User): Observable<ApiResponse<User>> {
     const url = `${ApiService.BASE_URL}/auth/register`;
     return this.http.post<ApiResponse<User>>(url, body);
-  }
-
-  loginUser(body: LoginRequest): Observable<ApiResponse<LoginRequest>> {
-    const url = `${ApiService.BASE_URL}/auth/login`;
-    return this.http.post<ApiResponse<LoginRequest>>(url, body, {
-      withCredentials: true,
-    });
-  }
-
-  logout(): Observable<ApiResponse<null>> {
-    const url = `${ApiService.BASE_URL}/auth/logout`;
-    return this.http
-      .post<ApiResponse<null>>(url, {}, { withCredentials: true })
-      .pipe(
-        tap(() => {
-          this.authStatusChange.emit();
-        }),
-        catchError((error) => {
-          console.error('Erro ao fazer logout:', error);
-          this.authStatusChange.emit();
-          return throwError(() => error);
-        })
-      );
   }
 
   getLoggedInUserInfo(): Observable<ApiResponse<User>> {
