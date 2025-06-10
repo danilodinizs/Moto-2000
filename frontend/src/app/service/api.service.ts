@@ -17,7 +17,6 @@ import { TransactionRequest } from '../interfaces/transaction-request';
 import { TransactionStatus } from '../enums/transaction-status';
 import { Router } from '@angular/router';
 
-// Interface para o status de autenticação retornado pelo backend
 interface AuthStatus {
   isAuthenticated: boolean;
   role: string | null;
@@ -29,37 +28,26 @@ interface AuthStatus {
 export class ApiService {
   private static BASE_URL = 'http://localhost:2904/v1/api';
 
-  // MUDANÇA 1: Substituindo EventEmitter por BehaviorSubject
-  // Ele armazena o último estado de autenticação e notifica os componentes sobre mudanças.
   private authStatusSubject = new BehaviorSubject<AuthStatus>({ isAuthenticated: false, role: null });
 
-  // MUDANÇA 2: Observables públicos derivados do BehaviorSubject.
-  // Eles não fazem novas chamadas de API, apenas leem o valor atual do 'authStatusSubject'.
   public isAuthenticated$: Observable<boolean> = this.authStatusSubject.asObservable().pipe(map(status => status.isAuthenticated));
   public isAdmin$: Observable<boolean> = this.authStatusSubject.asObservable().pipe(map(status => status.isAuthenticated && status.role === UserRole.MANAGER));
 
   constructor(private http: HttpClient, private router: Router) {
-    // Verifica o status de autenticação assim que o serviço é iniciado.
     this.checkAuthStatus().subscribe();
   }
 
-  // MUDANÇA 3: Método para verificar e ATUALIZAR o estado centralizado.
   checkAuthStatus(): Observable<AuthStatus> {
     const url = `${ApiService.BASE_URL}/auth/status`;
     return this.http.get<AuthStatus>(url, { withCredentials: true }).pipe(
       catchError(() => of({ isAuthenticated: false, role: null })),
-      tap(status => this.authStatusSubject.next(status)) // Atualiza o BehaviorSubject com a resposta
+      tap(status => this.authStatusSubject.next(status))
     );
   }
-
-  /*** MÉTODOS DE AUTH ATUALIZADOS ***/
-
-
 
   loginUser(body: LoginRequest): Observable<any> {
     const url = `${ApiService.BASE_URL}/auth/login`;
     return this.http.post(url, body, { withCredentials: true }).pipe(
-      // Após o login bem-sucedido, verificamos novamente o status para atualizar o estado.
       tap(() => {
         this.checkAuthStatus().subscribe();
       })
@@ -71,12 +59,11 @@ export class ApiService {
     this.http.post(url, {}, { withCredentials: true }).pipe(
       catchError(error => {
         console.error('Erro no logout do backend, mas forçando logout no frontend.', error);
-        return of(null); // Continua o fluxo mesmo se o backend falhar
+        return of(null);
       })
     ).subscribe(() => {
-      // MUDANÇA 4: A lógica de atualização de estado e redirecionamento agora está aqui.
-      this.authStatusSubject.next({ isAuthenticated: false, role: null }); // Atualiza o estado localmente
-      this.router.navigate(['/login']); // Navega APÓS a conclusão da chamada
+      this.authStatusSubject.next({ isAuthenticated: false, role: null });
+      this.router.navigate(['/login']);
     });
   }
 
