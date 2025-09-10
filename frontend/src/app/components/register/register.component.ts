@@ -7,12 +7,13 @@ import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-register',
+  standalone: true,
   imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  constructor(private apiSerivice:ApiService, private router:Router){}
+  constructor(private apiSerivice: ApiService, private router:Router){}
 
   formData: any = {
     username: '',
@@ -43,7 +44,7 @@ export class RegisterComponent {
   showMessage(message: string) {
     this.message = message;
     setTimeout(() => {
-
+      this.message = null;
     }, 4000)
   }
 }
