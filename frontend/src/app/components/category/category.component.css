@@ -1,0 +1,111 @@
+.category-page {
+    padding: 20px;
+    color: #f1f1f1;
+    min-height: 100vh;
+}
+ 
+.category-header {
+    margin-left: 12px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+ 
+.category-header h1 {
+    color: #ff2e2e;
+    font-weight: 600;
+}
+ 
+.add-cat {
+    margin: 0 auto;
+}
+ 
+.category-header input {
+    padding: 14px;
+    margin-right: 10px;
+    width: 300px;
+    background-color: #eff2f5;
+    border: 1px solid #444;
+    color: #000000;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.category-header input:focus {
+    outline: none;
+    border-color: #ff2e2e;
+    box-shadow: 0 0 10px rgba(255, 46, 46, 0.2);
+}
+ 
+.category-header button {
+    padding: 14px 18px;
+    background-color: #ff2e2e;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.category-header button:hover {
+    background-color: #e62222;
+    transform: translateY(-2px);
+}
+ 
+.category-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 50px;
+}
+ 
+.category-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 18px;
+    margin: 5px;
+    font-size: 20px;
+    background: linear-gradient(135deg, #1e2124, #2b2f33);
+    border: 1px solid #444;
+    border-radius: 10px;
+    color: #f1f1f1;
+    font-weight: 550;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+ 
+.category-item:hover {
+    background: linear-gradient(135deg, #2b2f33, #1e2124);
+    border-color: #ff2e2e;
+    transform: translateY(-2px);
+}
+ 
+.category-actions button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #ff2e2e;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.category-actions button:hover {
+    background-color: #e62222;
+    transform: translateY(-2px);
+}
+ 
+.category-actions button:last-child {
+    background-color: #121416;
+    border: 1px solid #ff2e2e;
+}
+
+.category-actions button:last-child:hover {
+    background-color: #ff2e2e;
+    border-color: #ff2e2e;
+}

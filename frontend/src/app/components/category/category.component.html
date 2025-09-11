@@ -1,1 +1,25 @@
-<p>category works!</p>
+<div class="category-page">
+    <div>
+        <p *ngIf="message" class="message">{{ message }}</p>
+    </div>
+
+    <div class="category-header">
+        <h1>Categorias</h1>
+
+        <div class="add-cat">
+            <input type="text" [(ngModel)]="categoryName" placeholder="Nome da categoria"/>
+            <button *ngIf="!isEditing" (click)="addCategory()"> Adicionar Categoria</button>
+            <button *ngIf="isEditing" (click)="editCategory()"> Editar Categoria</button>
+        </div>
+    </div>
+
+    <ul *ngIf="categories.length > 0" class="category-list">
+        <li *ngFor="let category of categories" class="category-item">
+            <span>{{category.name}}</span>
+            <div class="category-actions">
+                <button (click)="handleEditCategory(category)"> Editar</button>
+                <button (click)="deleteCategory(category.id)"> Apagar</button>
+            </div>
+        </li>
+    </ul>
+</div>
