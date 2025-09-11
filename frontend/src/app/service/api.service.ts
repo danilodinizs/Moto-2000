@@ -95,7 +95,7 @@ export class ApiService {
   }
 
   /**CATEGOTY ENDPOINTS */
-  createCategory(body: Category): Observable<ApiResponse<Category>> {
+  createCategory(body: any): Observable<ApiResponse<Category>> {
     const url = `${ApiService.BASE_URL}/categories/add`;
     return this.http.post<ApiResponse<Category>>(url, body, {
       withCredentials: true,
