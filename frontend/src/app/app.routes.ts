@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { GuardService } from './service/guard.service';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { CategoryComponent } from './components/category-list/category.component';
+import { CategoryComponent } from './components/category/category.component';
 import { SupplierComponent } from './components/supplier/supplier-list/supplier.component';
 import { ProductComponent } from './components/product/product-list/product.component';
 import { SupplierAddEditComponent } from './components/supplier/supplier-add-edit/supplier-add-edit.component';
