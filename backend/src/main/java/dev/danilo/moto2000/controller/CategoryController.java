@@ -23,6 +23,7 @@ public class CategoryController {
     private final CategoryService service;
 
     @PostMapping("/save")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<Response> createCategory(@RequestBody @Valid CategoryDTO dto) {
         return ResponseEntity.ok(service.createCategory(dto));
     }
