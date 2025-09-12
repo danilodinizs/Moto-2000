@@ -99,10 +99,8 @@ export class CategoryComponent implements OnInit {
     if (window.confirm("Você tem certeza que quer apagar essa categoria?"))
       this.apiService.deleteCategory(categoryId).subscribe({
       next:(res:any) => {
-        if (res.status === 200) {
-          this.showMessage("Categoria apagada com sucesso")
-          this.getCategories(); // reload the category 
-        }
+        this.showMessage("Categoria apagada com sucesso")
+        this.getCategories(); // reload the category     
       }, 
       error:(error) => {
           this.showMessage(error?.error?.message || error?.message || "Não foi possível apagar a categoria: " + error)
