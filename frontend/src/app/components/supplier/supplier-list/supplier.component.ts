@@ -30,7 +30,7 @@ export class SupplierComponent implements OnInit{
         }
       }, 
       error:(error) => {
-          this.showMessage(error?.error?.message || error?.message || "Não foi possível salvar a categoria: " + error)
+          this.showMessage(error?.error?.message || error?.message || "Não foi possível recuperar os fornecedores: " + error)
 
       }
     })
@@ -50,7 +50,7 @@ export class SupplierComponent implements OnInit{
   deleteSupplier(supplierId: string): void {
     if (window.confirm("Você tem certeza que quer apagar esse fornecedor?"))
       this.apiService.deleteSupplier(supplierId).subscribe({
-      next:(res:any) => {
+      next:() => {
         this.showMessage("Fornecedor apagado com sucesso")
         this.getSuppliers(); // reload the supplier     
       }, 
