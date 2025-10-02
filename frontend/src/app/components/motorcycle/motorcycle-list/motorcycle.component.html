@@ -1,1 +1,23 @@
-<p>motorcycle works!</p>
+<div class="motorcycle-page">
+    <p *ngIf="message" class="message">{{message}}</p>
+
+    <!-- HEADER -->
+     <div class="motorcycle-header">
+            <h1>Motocicletas</h1>
+
+            <div class="add-mot">
+                <button (click)="navigateToAddMotorcyclePage()">Adicionar motocicleta</button>
+            </div>
+     </div>
+
+    <!-- SUPPLIER LIST-->
+    <ul class="motorcycle-list" *ngIf="motorcycles.length > 0">
+        <li *ngFor="let motorcycle of motorcycles" class="motorcycle-item" [attr.key]="motorcycle.id">
+            <span>{{motorcycle.licensePlate}}</span>
+            <div class="motorcycle-actions">
+                <button (click)="navigateToEditMotorcyclePage(motorcycle.id)">Editar</button>
+                <button (click)="deleteMotorcycle(motorcycle.id)">Apagar</button>
+            </div>
+        </li>
+    </ul>
+</div>
