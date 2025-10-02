@@ -3,10 +3,12 @@ package dev.danilo.moto2000.service.impl;
 import dev.danilo.moto2000.dto.ClientDTO;
 import dev.danilo.moto2000.dto.MotorcycleDTO;
 import dev.danilo.moto2000.dto.Response;
+import dev.danilo.moto2000.entity.Client;
 import dev.danilo.moto2000.entity.Motorcycle;
 import dev.danilo.moto2000.exceptions.DataAlreadyExistsException;
 import dev.danilo.moto2000.exceptions.MethodArgumentNotValidException;
 import dev.danilo.moto2000.exceptions.NotFoundException;
+import dev.danilo.moto2000.repository.ClientRepository;
 import dev.danilo.moto2000.repository.MotorcycleRepository;
 import dev.danilo.moto2000.service.MotorcycleService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 public class MotorcycleServiceImpl implements MotorcycleService {
 
     private final MotorcycleRepository repository;
+    private final ClientRepository clientRepository;
 
     private final ModelMapper mapper;
 
@@ -57,7 +60,15 @@ public class MotorcycleServiceImpl implements MotorcycleService {
             throw new DataAlreadyExistsException(conflictResponse);
         }
 
-        repository.save(mapper.map(motorcycleDTO, Motorcycle.class));
+        Motorcycle moto = mapper.map(motorcycleDTO, Motorcycle.class);
+
+        if (motorcycleDTO.getClientId() != null) {
+            Client client = clientRepository.findById(motorcycleDTO.getClientId())
+                    .orElseThrow(() -> new NotFoundException("Cliente não encontrado com ID: " + motorcycleDTO.getClientId()));
+            moto.setClient(client);
+        }
+
+        repository.save(moto);
 
         return Response.builder()
                 .status(200)
@@ -80,8 +91,7 @@ public class MotorcycleServiceImpl implements MotorcycleService {
                 .status(200)
                 .message("Sucesso")
                 .motorcycles(motorcyclesDTO)
-                .build()
-                ;
+                .build();
     }
 
     @Override
