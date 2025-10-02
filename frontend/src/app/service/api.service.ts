@@ -130,7 +130,7 @@ export class ApiService {
   }
 
   /** SUPPLIER ENDPOINTS */
-  createSupplier(body: Supplier): Observable<ApiResponse<Supplier>> {
+  createSupplier(body: Omit<Supplier, 'id'>): Observable<ApiResponse<Supplier>> {
     const url = `${ApiService.BASE_URL}/suppliers/save`;
     return this.http.post<ApiResponse<Supplier>>(url, body, {
       withCredentials: true,
