@@ -1,1 +1,24 @@
-<p>supplier-add-edit works!</p>
+<div class="supplier-form-page">
+    <p *ngIf="message" class="message">{{message}}</p>
+    <h1>{{isEditing ? 'Atualizar fornecedor' : 'Adicionar fornecedor'}}</h1>
+
+    <form (ngSubmit)="handleSubmit()">
+        <div class="form-group">
+            <label for="">Nome</label>
+            <input type="text" [(ngModel)]="formData.name" name="name" placeholder="Nome do fornecedor">
+        </div>
+        <div class="form-group">
+            <label for="">CNPJ</label>
+            <input type="text" [(ngModel)]="formData.cnpj" name="cnpj" placeholder="CNPJ do fornecedor">
+        </div>
+        <div class="form-group">
+            <label for="">Contato</label>
+            <input type="text" [(ngModel)]="formData.contactInfo" name="contactInfo" placeholder="Contato do fornecedor">
+        </div>
+        <div class="form-group">
+            <label for="">Endereço</label>
+            <input type="text" [(ngModel)]="formData.address" name="address" placeholder="Endereço do fornecedor">
+        </div>
+        <button type="submit">{{isEditing ? 'Atualizar' : 'Adicionar'}}</button>
+    </form>
+</div>
