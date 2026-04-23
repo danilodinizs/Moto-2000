@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16
+    container_name: moto2000-db
+    environment:
+      POSTGRES_DB: moto2000
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: .
+    image: danilodinizs/moto2000-backend:latest
+    container_name: moto2000-api
+    ports:
+      - "2904:2904"
+    depends_on:
+      - db
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/moto2000
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+
+  frontend:
+    build: ../frontend
+    image: danilodinizs/moto2000-frontend:latest
+    container_name: moto2000-front
+    ports:
+      - "4200:4200"
+    environment:
+      - REACT_APP_API_URL=http://localhost:2904
+    depends_on:
+      - backend

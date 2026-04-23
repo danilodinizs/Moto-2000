@@ -1,0 +1,24 @@
+name: Moto2000 Backend CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-java:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '26'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build Maven
+        run: mvn clean package -DskipTests
+
+      - name: Build Docker Image
+        run: docker build -t danilodinizs/moto2000-backend:latest .
